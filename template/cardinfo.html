@@ -1,0 +1,219 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>Fibank Secure Payment</title>
+</head>
+<body>
+ 
+%%javascript%%
+ 
+<style type="text/css"> 
+ 
+ 
+body
+	{
+	color: #586467;
+	margin: 0 auto;
+	font-size: 14px;
+	height: 100%;
+	color: black;
+	background:#e2e2e2 url(images/icafe/results_bg_light.jpg) no-repeat top left;
+	font-family: Helvetica, Arial;
+}
+ 
+.header, .content, .footer{
+	width: 960px;
+	margin: 0 auto;
+	position: relative;
+	}
+ 
+table{
+	font-size: 14px;
+	color: black;
+	}
+	
+.logo {
+	width: 960px;}
+	
+.logo div{
+	display: block;
+	width: 217px;
+	height: 102px;
+	background: url(images/icafe/logo.png) no-repeat center;
+	text-indent: -9999px;}
+ 
+ 
+.fullwc_content{			
+	width: 960px;
+	margin-left: auto;
+	margin-right: auto;
+	}
+	
+.fullwc_content .top_shadow{
+	background: url(images/icafe/details_shadow_top.gif) repeat-x top left;
+	width: 954px;
+	height: 4px;
+	margin: 0 4px;
+	}
+ 
+.fullwc_content .bottom_shadow{
+	background: url(images/icafe/details_shadow_bottom.gif) repeat-x bottom left;
+	width: 954px;
+	height: 4px;
+	margin: 0 4px 9px 4px;
+	}
+ 
+ 
+.fullwc_content .cr_tbl{
+	background: url(images/icafe/945px_shadow_center.gif) repeat-y;
+	width: 920px;
+	padding: 20px;
+	}
+	
+.buy_bar{
+	border-top: 1px solid #d4d8d9;
+	padding: 10px;
+	}
+	
+input[type="text"]{
+border-bottom: 1px solid #DADADA;
+border-bottom-left-radius: 3px 3px;
+border-bottom-left-radius: 3px 3px;
+border-bottom-right-radius: 3px 3px;
+border-bottom-right-radius: 3px 3px;
+border-left: 1px solid #8F8F8F;
+border-right: 1px solid #DADADA;
+border-top: 1px solid #8F8F8F;
+border-top-left-radius: 3px 3px;
+border-top-left-radius: 3px 3px;
+border-top-right-radius: 3px 3px;
+border-top-right-radius: 3px 3px;
+color: #333;
+font-size: 16px;
+padding: 5px;
+}
+ 
+.text_info{
+	font-size: 18px;
+	padding: 12px;
+	font-size: 24px;
+	color: #3C485D;
+	border-bottom: 1px solid #ccc;
+	}
+	
+.text_info2{
+	font-size: 18px;
+	padding: 12px;
+	font-size: 14px;
+	color: #3C485D;
+	border-bottom: 1px solid #ccc;
+	}
+ 
+ 
+ 
+.text_info span{
+	width: 100px;
+	font-size: 12px;
+	line-height: 28px;
+	display: block;
+	float: left;
+	}
+	
+.text_info2 span{
+	width: 100px;
+	font-size: 12px;
+	line-height: 18px;
+	display: block;
+	float: left;
+	}
+ 
+	
+h1{
+border-bottom: 1px solid #D4D8D9;
+color: #2A2E33;
+font-size: 20px;
+font-weight: normal;
+margin: 0px 0px 10px;
+padding: 0px 0px 8px;
+text-shadow: #F3F3F3 1px 1px;
+}
+ 
+span.ecomm_validation_error {
+color: red;
+display: block;
+}
+ 
+ 
+</style>
+<div class="header">
+<div class="logo">
+	<div>StockPodium</div>
+</div>
+</div>
+<div class="content">
+<div class="fullwc_content">
+ 
+<div class="top_shadow"></div>
+<div class="cr_tbl">
+<h1>Данни за карта</h1>
+<div style="float:left; width:500px;">
+<p>%%formdef%%</p>
+<table border="0"  cellpadding="5" cellspacing="0">
+<tbody>
+<tr>
+<td>
+Имена на картодържател<br>
+%%cardname%%
+</td>
+</tr>
+<tr>
+<td>Номер на карта<br>
+%%cardnr%%</td>
+</tr>
+<tr>
+<td>Дата на валидност (ММ/ГГ)<br>
+%%expmonth_select%%/%%expyear_select%%</td>
+</tr>
+<tr>
+<td>CVC2<br>
+%%cvc2%%</td>
+</tr>
+<tr>
+</tbody>
+</table>
+</div>
+ 
+<div style="float:left; width:420px;">
+<div class="text_info"><span>Сума</span> %%amount%%</div>
+<div class="text_info2"><span>Валута</span> %%ccyalpha%%</div>
+<div class="text_info2"><span>Поръчка номер</span> %%description%%</div>
+</div>
+ 
+<div style="margin-top:15px; text-align:right; clear:both">
+<input value="Плати" style="
+		background: url(images/icafe/opt_btn_normal.png) no-repeat center;
+		width: 116px;
+		height: 28px;
+		line-height: 24px;
+		color: #FFF;
+		font-size: 14px;
+		text-align: center;
+		text-shadow: #2580a3 -1px -1px 0;
+		border:0;
+		font-family:Helvetica, Arial;"
+type="submit">
+</div>
+ 
+<div><img src="images/icafe/3d_secure.gif"></div>
+</div>
+<div class="bottom_shadow"></div>
+<div>
+<p>ICafe</p>
+</div>
+</div>
+</div>
+ 
+ 
+</body>
+</html>
