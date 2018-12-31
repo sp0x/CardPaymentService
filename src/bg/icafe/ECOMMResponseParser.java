@@ -3,7 +3,15 @@ package bg.icafe;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ *
+ */
 public class ECOMMResponseParser {
+    /**
+     * Parse a ECOMM response string to a hashmap
+     * @param payload
+     * @return
+     */
     public Map<String, String> parse(String payload){
         String[] lines = payload.split("\n");
         Map<String, String> output = new HashMap<>();

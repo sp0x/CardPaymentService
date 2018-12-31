@@ -17,7 +17,6 @@ import org.apache.commons.lang3.tuple.Pair;
 public class Main {
 
     public static void main(String[] args) {
-	// write your code here
         try {
             MqConfig mqconfig = readConfiguration();
             Listener mqListener = new Listener(mqconfig);
@@ -47,6 +46,11 @@ public class Main {
         }
     }
 
+    /**
+     * Reads environment configuration.
+     * @return
+     * @throws Exception
+     */
     private static MqConfig readConfiguration() throws Exception {
         String host = System.getenv("MQ_HOST");
         if(host==null || host.length()==0) throw new Exception("MQ_HOST Is required");
@@ -57,7 +61,10 @@ public class Main {
         return mqConfig;
     }
 
-
+    /**
+     *
+     * @return
+     */
     private static Pair<Merchant, Properties> getMerchant(){
         Merchant merchant;
         Properties props = new Properties();

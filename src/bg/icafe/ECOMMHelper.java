@@ -26,18 +26,25 @@ public class ECOMMHelper
         return p;
     }
 
-    public RecurringPaymentResult initializeRecurring(String amount, String clientIp){
+    public RecurringPaymentResult initializeRecurring(String amount, String clientIp, String description){
         Payment p = createPayment();
-        String description = p.getDescription();
+        p.setDescription(description);
         String currency = Config.getCurrency();
         String recurringResult = this.merch.startRP(Long.toString(p.getId()),amount, currency, clientIp, description, props);
         Map<String,String> parsedResult = this.parser.parse(recurringResult);
         return RecurringPaymentResult.fromRecurringResult(parsedResult, true);
     }
 
-    public RecurringPaymentResult makeRecurring(String recurringId, String amount, String clientIp){
+    /**
+     * Makes a recurring payment request.
+     * @param recurringId
+     * @param amount
+     * @param clientIp
+     * @return
+     */
+    public RecurringPaymentResult makeRecurring(String recurringId, String amount, String clientIp, String description){
         Payment p = createPayment();
-        String description = p.getDescription();
+        p.setDescription(description);
         String currency = Config.getCurrency();
         String recurringResult = this.merch.makeRP(recurringId, amount, currency, clientIp, description, props);
         Map<String,String> result = this.parser.parse(recurringResult);

@@ -39,6 +39,12 @@ public class RecurringPaymentResult
         return isInitial;
     }
 
+    /**
+     * Parses a recurring payment request.
+     * @param res
+     * @param isInitial
+     * @return
+     */
     public static RecurringPaymentResult fromRecurringResult(Map<String,String> res, boolean isInitial) {
         String transactionId = res.get("TRANSACTION_ID");
         String result = res.get("RESULT");

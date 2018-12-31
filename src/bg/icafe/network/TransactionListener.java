@@ -10,7 +10,11 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
-public class TransactionListener {
+/**
+ *
+ */
+public class TransactionListener
+{
     private static final String QUEUE_TRANSACTIONS = "sales.transaction_request";
     private static final String EXCHANGE_SALES = "sales";
 
@@ -46,12 +50,25 @@ public class TransactionListener {
          */
     }
 
-    private void handleTransactionRequest(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws Exception {
+    /**
+     *
+     * @param consumerTag
+     * @param envelope
+     * @param properties
+     * @param body
+     * @throws Exception
+     */
+    private void handleTransactionRequest(String consumerTag,
+                                          Envelope envelope,
+                                          AMQP.BasicProperties properties,
+                                          byte[] body) throws Exception {
         Channel chan = _base.getChannel();
         long deliveryTag = envelope.getDeliveryTag();
         String replyTo = properties.getReplyTo();
         JSONObject bodyJson = new JSONObject(new String(body));
+
         String type = bodyJson.getString("type");
+        String description = bodyJson.getString("description");
         if(!bodyJson.has("ip")){
             throw new Exception("Client ip is required.");
         }else{
@@ -60,13 +77,13 @@ public class TransactionListener {
             RecurringPaymentResult result = null;
             //Handle the request
             if(type=="initial"){
-                result = _transactionHelper.initializeRecurring(Double.toString(amount), ip);
+                result = _transactionHelper.initializeRecurring(Double.toString(amount), ip, description);
             }else if(type=="secondary"){
                 if(!bodyJson.has("recurringId")){
                     throw new Exception("Recurring id is missing.");
                 }
                 String recurringId = bodyJson.getString("recurringId");
-                result = _transactionHelper.makeRecurring(recurringId, Double.toString(amount), ip);
+                result = _transactionHelper.makeRecurring(recurringId, Double.toString(amount), ip, description);
             }
 
             if(result==null){
