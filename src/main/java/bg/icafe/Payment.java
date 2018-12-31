@@ -1,6 +1,6 @@
 package bg.icafe;
 
-class Payment
+public class Payment
 {
     private long id;
     private String description;

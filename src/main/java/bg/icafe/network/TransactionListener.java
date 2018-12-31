@@ -3,12 +3,10 @@ package bg.icafe.network;
 import bg.icafe.ECOMMHelper;
 import bg.icafe.RecurringPaymentResult;
 import com.rabbitmq.client.*;
-import com.sun.javaws.exceptions.MissingFieldException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Properties;
 
 /**
  *
