@@ -5,7 +5,8 @@ class Payment
     private long id;
     private String description;
 
-    public Payment(){
+    public Payment()
+    {
         description = "";
     }
 
