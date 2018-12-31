@@ -15,7 +15,7 @@ Example transaction request:
 ```json
 { 
   "ip": "clientIp",
-  "recurringId": "...", //Transaction id used in the initial payment request, in order to make this payment as a recurring payment.
+  "recurringId": "...", //Transaction id that you get after an initial payment. For initial transactions this isn't required.
   "description": "Some description of the transaction",
   "type": "initial|secondary", //Initial is always placed for the first transaction.
   "amount": 1.0 // the amount of the transaction (double)
