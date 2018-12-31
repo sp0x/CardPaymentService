@@ -31,14 +31,6 @@
     <orderEntry type="library" name="Maven: com.rabbitmq:amqp-client:5.3.0" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.25" level="project" />
     <orderEntry type="library" name="Maven: org.json:json:20151123" level="project" />
-    <orderEntry type="module-library">
-      <library name="Maven: lv.tietoenator.cs.ecomm.merchant:ecomm_merchant:1.0">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/ecomm_merchant.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
+    <orderEntry type="library" name="Maven: lv.tietoenator.cs.ecomm.merchant:ecomm_merchant:1.0" level="project" />
   </component>
 </module>

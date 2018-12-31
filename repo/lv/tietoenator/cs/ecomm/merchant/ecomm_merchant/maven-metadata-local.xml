@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>lv.tietoenator.cs.ecomm.merchant</groupId>
+  <artifactId>ecomm_merchant</artifactId>
+  <versioning>
+    <release>1.0</release>
+    <versions>
+      <version>1.0</version>
+    </versions>
+    <lastUpdated>20181231130938</lastUpdated>
+  </versioning>
+</metadata>

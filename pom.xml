@@ -9,7 +9,13 @@
         <skipTests>true</skipTests>
     </properties>
     <packaging>jar</packaging>
-
+    <!-- Local repo for some of the libs, don't abuse the system scope-->
+    <repositories>
+        <repository>
+            <id>my-local-repo</id>
+            <url>file://${basedir}/repo</url>
+        </repository>
+    </repositories>
 
     <groupId>bg.icafe</groupId>
     <artifactId>FibankRecurring</artifactId>
@@ -35,8 +41,6 @@
             <groupId>lv.tietoenator.cs.ecomm.merchant</groupId>
             <artifactId>ecomm_merchant</artifactId>
             <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/libs/ecomm_merchant.jar</systemPath>
         </dependency>
     </dependencies>
 
@@ -50,6 +54,29 @@
                     <skip>true</skip>
                     <skipTests>true</skipTests>
                 </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <mainClass>bg.icafe.Main</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
+                        <phase>package</phase> <!-- bind to the packaging phase -->
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <!-- Build an executable JAR -->
