@@ -17,22 +17,26 @@ import org.apache.commons.lang3.tuple.Pair;
 public class Main {
 
     public static void main(String[] args) {
+        ECOMMHelper helper = null;
         try {
-            MqConfig mqconfig = readConfiguration();
+            Pair<Merchant, Properties> props = Config.getMerchant();
+            helper = new ECOMMHelper("", props.getLeft(), props.getRight());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try{
+            MqConfig mqconfig = Config.readMqConfiguration();
             Listener mqListener = new Listener(mqconfig);
-            Pair<Merchant, Properties> props = getMerchant();
-            ECOMMHelper helper = new ECOMMHelper("", props.getLeft(), props.getRight());
-
             mqListener.connect(mqconfig.getPass());
             TransactionListener tListener = new TransactionListener(mqListener, helper);
-            hang();
-        } catch (IOException e) {
+        }catch (IOException e) {
             e.printStackTrace();
         } catch (TimeoutException e) {
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
+        hang();
     }
 
     private static void hang(){
@@ -46,46 +50,9 @@ public class Main {
         }
     }
 
-    /**
-     * Reads environment configuration.
-     * @return
-     * @throws Exception
-     */
-    private static MqConfig readConfiguration() throws Exception {
-        String host = System.getenv("MQ_HOST");
-        if(host==null || host.length()==0) throw new Exception("MQ_HOST Is required");
-        String username = System.getenv("MQ_USER");
-        String port = System.getenv("MQ_PORT");
-        String pass = System.getenv("MQ_PASS");
-        MqConfig mqConfig = new MqConfig(host, port, username, pass);
-        return mqConfig;
-    }
 
-    /**
-     *
-     * @return
-     */
-    private static Pair<Merchant, Properties> getMerchant(){
-        Merchant merchant;
-        Properties props = new Properties();
-        try{
-            String filename = "merchant.properties";
-            InputStream input = Main.class.getClassLoader().getResourceAsStream(filename);
-            props.load(input);
 
-            merchant = new Merchant(props);
-        }catch(ConfigurationException e){
-            System.err.println("Error: " + e.getMessage());
-            return null;
-        } catch (FileNotFoundException e) {
-            System.err.println("Error: " + e.getMessage());
-            return null;
-        } catch (IOException e) {
-            System.err.println("Error: " + e.getMessage());
-            return null;
-        }
-        return Pair.of(merchant, props);
-    }
+
 }
 
 

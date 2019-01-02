@@ -33,6 +33,7 @@ public class Listener
         factory.setPassword(password);
         _connection = factory.newConnection();
         _channel = _connection.createChannel();
+        System.out.println("Connected to mq host " + _host);
     }
 
     public Channel getChannel() {
