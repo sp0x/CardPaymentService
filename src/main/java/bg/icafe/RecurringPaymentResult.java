@@ -46,8 +46,17 @@ public class RecurringPaymentResult
      * @return
      */
     public static RecurringPaymentResult fromRecurringResult(Map<String,String> res, boolean isInitial) {
+        if(res==null){
+            return null;
+        }
         String transactionId = res.get("TRANSACTION_ID");
         String result = res.get("RESULT");
+        for (String name: res.keySet()){
+            String key =name.toString();
+            String value = res.get(name).toString();
+            System.out.println(key + " " + value);
+        }
+
         String resultCode = res.get("RESULT_CODE");
         String rrn = res.get("RRN");
         String approvalCode = res.get("APPROVAL_CODE");
@@ -62,7 +71,7 @@ public class RecurringPaymentResult
     }
 
     public static RecurringPaymentResultType parseRecurringResultType(String result){
-        if(result.equals("OK")) return RecurringPaymentResultType.Ok;
+        if(result!=null && result.equals("OK")) return RecurringPaymentResultType.Ok;
         else  return RecurringPaymentResultType.Failed;
     }
 }

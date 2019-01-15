@@ -2,7 +2,15 @@ package bg.icafe;
 
 import lv.tietoenator.cs.ecomm.merchant.Merchant;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLEncoder;
+import java.security.GeneralSecurityException;
+import java.security.cert.X509Certificate;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
@@ -19,18 +27,20 @@ public class ECOMMHelper
         this.clientIp = clientIp;
         this.props = props;
         this.parser = new ECOMMResponseParser();
+
     }
 
-    private Payment createPayment(){
-        Payment p = new Payment();
+    private Payment createPayment(String id){
+        Payment p = new Payment(id);
         return p;
     }
 
-    public RecurringPaymentResult initializeRecurring(String amount, String clientIp, String description){
-        Payment p = createPayment();
+    public RecurringPaymentResult initializeRecurring(String paymentId, String amount, String clientIp, String description){
+        Payment p = createPayment(paymentId);
         p.setDescription(description);
         String currency = Config.getCurrency();
-        String recurringResult = this.merch.startRP(Long.toString(p.getId()),amount, currency, clientIp, description, props);
+        String recurringResult = this.merch.startSMSTrans(p.getId(),amount, currency, clientIp, description, props);
+        System.out.println("Payment response: " + recurringResult);
         Map<String,String> parsedResult = this.parser.parse(recurringResult);
         return RecurringPaymentResult.fromRecurringResult(parsedResult, true);
     }
@@ -43,7 +53,7 @@ public class ECOMMHelper
      * @return
      */
     public RecurringPaymentResult makeRecurring(String recurringId, String amount, String clientIp, String description){
-        Payment p = createPayment();
+        Payment p = createPayment(recurringId);
         p.setDescription(description);
         String currency = Config.getCurrency();
         String recurringResult = this.merch.makeRP(recurringId, amount, currency, clientIp, description, props);

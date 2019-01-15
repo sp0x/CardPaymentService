@@ -3,12 +3,9 @@ package bg.icafe;
 import bg.icafe.network.Listener;
 import bg.icafe.network.MqConfig;
 import bg.icafe.network.TransactionListener;
-import lv.tietoenator.cs.ecomm.merchant.ConfigurationException;
 import lv.tietoenator.cs.ecomm.merchant.Merchant;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
 import java.util.concurrent.TimeoutException;
 
@@ -19,7 +16,7 @@ public class Main {
     public static void main(String[] args) {
         ECOMMHelper helper = null;
         try {
-            Pair<Merchant, Properties> props = Config.getMerchant();
+            Pair<Merchant, Properties> props = Config.getMerchantConfiguration();
             helper = new ECOMMHelper("", props.getLeft(), props.getRight());
         } catch (Exception e) {
             e.printStackTrace();

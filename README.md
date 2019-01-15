@@ -43,8 +43,23 @@ Required keys are:
 
 Refer to the FiBank docs for more information.
 
+General settings are in the file `settings.properties`  
+- mq.host - The host to connect to for rabbit mq
+- mq.user - user
+- mq.pass - pass
+
 #### Environment 
+Environment variables have higher priority than settings defined in .properties files.  
 `MQ_HOST` - The RabbitMQ Host to connect to  
 `MQ_PORT` - RabbitMQ Port to use  
 `MQ_USER` - User for the exchange  
-`MQ_PASS` - Password for the exchange
+`MQ_PASS` - Password for the exchange  
+`KEYSTORE` - The location of the keystore if you're using another one  
+`KEYSTORE_PASS` - The password for the keystore
+
+#### Security notes:
+You have to enable MD5 and MD5withRSA in your `/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/security/java.security`
+Since fibank's merchant is outdated and uses old algos.  
+Look for
+ - jdk.certpath.disabledAlgorithms  
+ - jdk.tls.disabledAlgorithms

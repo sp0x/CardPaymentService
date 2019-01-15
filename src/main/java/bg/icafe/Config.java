@@ -26,11 +26,27 @@ public class Config
      * @throws Exception
      */
     public static MqConfig readMqConfiguration() throws Exception {
+        Properties props = new Properties();
+        String filename = "settings.properties";
+        InputStream input = Main.class.getClassLoader().getResourceAsStream(filename);
+        props.load(input);
         String host = System.getenv("MQ_HOST");
-        if(host==null || host.length()==0) throw new Exception("MQ_HOST Is required");
+
+        if(host==null || host.length()==0){
+            host = props.getProperty("mq.host");
+        }
+        if(host==null || host.length()==0){
+            throw new Exception("MQ_HOST Is required");
+        }
         String username = System.getenv("MQ_USER");
+        if(username==null){
+            username = props.getProperty("mq.user");
+        }
         String port = System.getenv("MQ_PORT");
         String pass = System.getenv("MQ_PASS");
+        if(pass==null){
+            pass = props.getProperty("mq.pass");
+        }
         MqConfig mqConfig = new MqConfig(host, port, username, pass);
         return mqConfig;
     }
@@ -38,7 +54,7 @@ public class Config
      *
      * @return
      */
-    public static Pair<Merchant, Properties> getMerchant(){
+    public static Pair<Merchant, Properties> getMerchantConfiguration(){
         Merchant merchant;
         Properties props = new Properties();
         try{
@@ -53,6 +69,9 @@ public class Config
             String keystorePath = props.getProperty("keystore.file");
             keystorePath = new File(keystorePath).getCanonicalPath();
             System.out.println("Using keystore: " + keystorePath);
+            if(!(new File(keystorePath).exists())){
+                throw new FileNotFoundException("Keystore file not found.");
+            }
             merchant = new Merchant(props);
         }catch(ConfigurationException e){
             System.err.println("Error: " + e.getMessage());

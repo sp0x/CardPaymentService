@@ -75,7 +75,7 @@ public class TransactionListener
             RecurringPaymentResult result = null;
             //Handle the request
             if(type=="initial"){
-                result = _transactionHelper.initializeRecurring(Double.toString(amount), ip, description);
+                result = _transactionHelper.initializeRecurring(null, Double.toString(amount), ip, description);
             }else if(type=="secondary"){
                 if(!bodyJson.has("recurringId")){
                     throw new Exception("Recurring id is missing.");
