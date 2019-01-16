@@ -13,13 +13,17 @@ import java.util.Properties;
 
 public class Config
 {
+    static final String CURRENCY_BG = "975";
+    static final String CURRENCY_USD = "840";
+    static final String CURRENCY_EUR = "978";
     /**
      * Get the configured currency code.
      * @return
      */
     public static String getCurrency(){
-        return "975";
+        return CURRENCY_BG;
     }
+
     /**
      * Reads environment configuration.
      * @return

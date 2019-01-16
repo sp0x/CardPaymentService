@@ -39,7 +39,7 @@ public class ECOMMHelper
         Payment p = createPayment(paymentId);
         p.setDescription(description);
         String currency = Config.getCurrency();
-        String recurringResult = this.merch.startSMSTrans(p.getId(),amount, currency, clientIp, description, props);
+        String recurringResult = this.merch.startSMSTrans(amount, currency, clientIp, description);
         System.out.println("Payment response: " + recurringResult);
         Map<String,String> parsedResult = this.parser.parse(recurringResult);
         return RecurringPaymentResult.fromRecurringResult(parsedResult, true);
