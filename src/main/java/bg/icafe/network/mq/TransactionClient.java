@@ -7,6 +7,8 @@ import com.rabbitmq.client.*;
 import lv.tietoenator.cs.ecomm.merchant.Merchant;
 import org.apache.commons.lang3.tuple.Pair;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -23,6 +25,8 @@ public class TransactionClient
     private final Listener _base;
     private final ECOMMHelper _transactionHelper;
     private static TransactionClient _instance;
+    private static final Logger logger = LoggerFactory.getLogger(TransactionClient.class);
+
 
     public static TransactionClient getInstance() throws Exception {
         if(_instance!=null) return _instance;
@@ -40,7 +44,7 @@ public class TransactionClient
         _base = base;
         _transactionHelper = helper;
         Channel chan = base.getChannel();
-        chan.exchangeDeclare(EXCHANGE_SALES, BuiltinExchangeType.TOPIC);
+        chan.exchangeDeclare(EXCHANGE_SALES, BuiltinExchangeType.TOPIC, true);
         chan.queueDeclare(QUEUE_TRANSACTIONS, true, false, false, null);
         chan.queueBind(QUEUE_TRANSACTIONS, EXCHANGE_SALES, QUEUE_TRANSACTIONS);
         chan.basicConsume(QUEUE_TRANSACTIONS, false, new DefaultConsumer(chan){
@@ -100,27 +104,36 @@ public class TransactionClient
                                           Envelope envelope,
                                           AMQP.BasicProperties properties,
                                           byte[] body) throws Exception {
-        Channel chan = _base.getChannel();
+        Channel channel = _base.getChannel();
         long deliveryTag = envelope.getDeliveryTag();
         String replyTo = properties.getReplyTo();
+        String correlationId = properties.getCorrelationId();
         JSONObject bodyJson = new JSONObject(new String(body));
 
         String type = bodyJson.getString("type");
         String description = bodyJson.getString("description");
-        String recurringId = bodyJson.getString("recurringId");
+        Object recId = bodyJson.get("recurringId");
+        String recurringId = recId==null ? null : recId.toString();
         if(!bodyJson.has("ip")){
             throw new Exception("Client ip is required.");
         }else{
             String ip = bodyJson.getString("ip");
             Double amount = bodyJson.getDouble("amount");
-            RecurringPaymentResult result = handleTransactionRequest(type, recurringId, amount, ip, description);
+            logger.info("Received transaction request [" + type + "] @" + ip + " - " + description);
             JSONObject reply = new JSONObject();
-            reply.put("url", result.getUrl());
-            reply.put("transactionId", result.getTransactionId());
-            reply.put("result", result.getResult());
-            reply.put("resultCode", result.getResultCode());
-            sendReply(replyTo, reply, properties.getCorrelationId());
-            chan.basicAck(deliveryTag, false);
+            try{
+                RecurringPaymentResult result = handleTransactionRequest(type, recurringId, amount, ip, description);
+                reply.put("url", result.getUrl());
+                reply.put("transactionId", result.getTransactionId());
+                reply.put("result", result.getResult());
+                reply.put("resultCode", result.getResultCode());
+            }catch(Exception ex){
+                reply.put("resultCode", "err");
+                reply.put("error", ex.getMessage());
+            }
+
+            sendReply(replyTo, reply, correlationId);
+            channel.basicAck(deliveryTag, false);
         }
 
     }
@@ -138,7 +151,7 @@ public class TransactionClient
             props = props.builder().correlationId(correlationId).build();
         }
         byte[] body = reply.toString().getBytes(StandardCharsets.UTF_8);
-        chan.basicPublish(EXCHANGE_SALES, replyTo, true, props, body);
+        chan.basicPublish("", replyTo,props, body);
     }
 
 

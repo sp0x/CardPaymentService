@@ -8,6 +8,10 @@ Workflow
     * The caller comes back after making/declining/timing out the purchase and calls us to finalize.
     * We finalize the transaction payment and log it.
          
+## Running the service
+To run the service you would need docker or maven.  
+Run the `run.sh` script to test and run the service.
+  
 ## Exchanges:
 `sales`:
 - sales.transaction_request - Queue for transaction requests  
@@ -47,6 +51,8 @@ General settings are in the file `settings.properties`
 - mq.host - The host to connect to for rabbit mq
 - mq.user - user
 - mq.pass - pass
+- http.host - Hostname on which the callback HTTP would listen
+- http.port - Port for the callback HTTP server
 
 #### Environment 
 Environment variables have higher priority than settings defined in .properties files.  
@@ -55,7 +61,9 @@ Environment variables have higher priority than settings defined in .properties 
 `MQ_USER` - User for the exchange  
 `MQ_PASS` - Password for the exchange  
 `KEYSTORE` - The location of the keystore if you're using another one  
-`KEYSTORE_PASS` - The password for the keystore
+`KEYSTORE_PASS` - The password for the keystore  
+`HTTP_HOST` - Host address for the callback http server  
+`HTTP_PORT` - Port for the callback http server
 
 #### Security notes:
 You have to enable MD5 and MD5withRSA in your `/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/security/java.security`

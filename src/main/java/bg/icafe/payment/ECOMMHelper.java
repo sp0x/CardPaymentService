@@ -46,12 +46,15 @@ public class ECOMMHelper
      * @param description
      * @return
      */
-    public RecurringPaymentResult initializeRecurring(String paymentId, String amount, String clientIp, String description){
+    public RecurringPaymentResult initializeRecurring(String paymentId, String amount, String clientIp, String description) throws TransactionException {
         Payment p = createPayment(paymentId);
         p.setDescription(description);
         String recurringResult = this.merch.startSMSTrans(amount, currency, clientIp, description);
         //System.out.println("Payment response: " + recurringResult);
         Map<String,String> parsedResult = this.parser.parse(recurringResult);
+        if(parsedResult.containsKey("error")){
+            throw new TransactionException(parsedResult.get("error"));
+        }
         RecurringPaymentResult result = _resultFactory.fromRecurringResult(parsedResult, true);
         return result;
     }

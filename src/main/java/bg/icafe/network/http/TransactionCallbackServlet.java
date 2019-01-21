@@ -49,11 +49,17 @@ public class TransactionCallbackServlet extends HttpServlet {
     }
 
     private void handleSuccessfullTransaction(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        String transactionId = req.getParameter("trans_id");
-        String error = req.getParameter("error");
-        TransactionClient tc = TransactionClient.getInstance();
         OutputStream outStream = resp.getOutputStream();
         PrintWriter writer = new PrintWriter(outStream);
+
+        String transactionId = req.getParameter("trans_id");
+        String error = req.getParameter("error");
+        if(transactionId==null || transactionId.length()==0){
+            writer.println("No transaction id!");
+            writer.flush();
+            return;
+        }
+        TransactionClient tc = TransactionClient.getInstance();
         ECOMMHelper ec = tc.getECOMM();
         if(error!=null && error.length()>0){
             //An error occurred.

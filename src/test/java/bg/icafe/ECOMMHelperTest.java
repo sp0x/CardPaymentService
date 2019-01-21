@@ -1,9 +1,6 @@
 package bg.icafe;
 
-import bg.icafe.payment.ECOMMHelper;
-import bg.icafe.payment.RecurringPaymentResult;
-import bg.icafe.payment.TransactionResult;
-import bg.icafe.payment.TransactionResultType;
+import bg.icafe.payment.*;
 import lv.tietoenator.cs.ecomm.merchant.Merchant;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
@@ -28,7 +25,12 @@ public class ECOMMHelperTest {
 
     @Test
     public void initializeRecurring() {
-        RecurringPaymentResult result = helper.initializeRecurring(null, "1",test_ip, "Recurring payment init test.");
+        RecurringPaymentResult result = null;
+        try {
+            result = helper.initializeRecurring(null, "1",test_ip, "Recurring payment init test.");
+        } catch (TransactionException e) {
+            e.printStackTrace();
+        }
         assertNotNull(result);
         assertNotNull(result.getTransactionId());
         assertNotNull(result.getUrl());
@@ -36,7 +38,12 @@ public class ECOMMHelperTest {
 
     @Test
     public void getTransactionStatus() {
-        RecurringPaymentResult result = helper.initializeRecurring(null, "1",test_ip, "Recurring payment init test.");
+        RecurringPaymentResult result = null;
+        try {
+            result = helper.initializeRecurring(null, "1",test_ip, "Recurring payment init test.");
+        } catch (TransactionException e) {
+            e.printStackTrace();
+        }
         assertNotNull(result);
         assertNotNull(result.getTransactionId());
         TransactionResult status = helper.getTransactionStatus(result.getTransactionId(), true);

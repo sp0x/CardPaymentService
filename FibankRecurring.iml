@@ -36,5 +36,6 @@
     <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-client:9.4.14.v20181114" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-servlet:9.4.14.v20181114" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-security:9.4.14.v20181114" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-simple:1.6.2" level="project" />
   </component>
 </module>
