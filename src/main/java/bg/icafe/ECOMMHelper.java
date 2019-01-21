@@ -21,13 +21,22 @@ public class ECOMMHelper
     private final String clientIp;
     private final Properties props;
     private final ECOMMResponseParser parser;
+    private String currency;
 
     public ECOMMHelper(String clientIp, Merchant merchant, Properties props){
         this.merch = merchant;
         this.clientIp = clientIp;
         this.props = props;
         this.parser = new ECOMMResponseParser();
+        this.currency = Config.getCurrency();
+    }
 
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 
     private Payment createPayment(String id){
@@ -35,12 +44,19 @@ public class ECOMMHelper
         return p;
     }
 
+    /**
+     * Initialize a recurring transaction
+     * @param paymentId
+     * @param amount
+     * @param clientIp
+     * @param description
+     * @return
+     */
     public RecurringPaymentResult initializeRecurring(String paymentId, String amount, String clientIp, String description){
         Payment p = createPayment(paymentId);
         p.setDescription(description);
-        String currency = Config.getCurrency();
         String recurringResult = this.merch.startSMSTrans(amount, currency, clientIp, description);
-        System.out.println("Payment response: " + recurringResult);
+        //System.out.println("Payment response: " + recurringResult);
         Map<String,String> parsedResult = this.parser.parse(recurringResult);
         return RecurringPaymentResult.fromRecurringResult(parsedResult, true);
     }

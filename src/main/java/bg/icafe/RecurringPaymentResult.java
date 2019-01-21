@@ -51,11 +51,11 @@ public class RecurringPaymentResult
         }
         String transactionId = res.get("TRANSACTION_ID");
         String result = res.get("RESULT");
-        for (String name: res.keySet()){
-            String key =name.toString();
-            String value = res.get(name).toString();
-            System.out.println(key + " " + value);
-        }
+//        for (String name: res.keySet()){
+//            String key =name.toString();
+//            String value = res.get(name).toString();
+//            System.out.println(key + " " + value);
+//        }
 
         String resultCode = res.get("RESULT_CODE");
         String rrn = res.get("RRN");

@@ -50,6 +50,16 @@ public class TransactionResult
         return tres;
     }
 
+    @Override
+    public String toString() {
+        return "TransactionResult{" +
+                "result=" + result +
+                ", code='" + code + '\'' +
+                ", rnn='" + rnn + '\'' +
+                ", recurringPaymentId='" + recurringPaymentId + '\'' +
+                ", recurringExpiry='" + recurringExpiry + '\'' +
+                '}';
+    }
 
     public static TransactionResult fromResult(TransactionResultType restype) {
         TransactionResult res = new TransactionResult();

@@ -12,6 +12,7 @@ import static junit.framework.TestCase.assertNotNull;
 public class ECOMMHelperTest {
 
     private ECOMMHelper helper;
+    private String test_ip = "85.85.85.85";
 
     @Before
     public void setUp() throws Exception {
@@ -22,7 +23,18 @@ public class ECOMMHelperTest {
 
     @Test
     public void initializeRecurring() {
-        RecurringPaymentResult result = helper.initializeRecurring(null, "1","85.217.220.130", "Recurring payment init test.");
+        RecurringPaymentResult result = helper.initializeRecurring(null, "1",test_ip, "Recurring payment init test.");
         assertNotNull(result);
+        assertNotNull(result.getTransactionId());
+    }
+
+    @Test
+    public void getTransactionStatus() {
+        RecurringPaymentResult result = helper.initializeRecurring(null, "1",test_ip, "Recurring payment init test.");
+        assertNotNull(result);
+        assertNotNull(result.getTransactionId());
+        TransactionResult status = helper.getTransactionStatus(result.getTransactionId(), true);
+        assertNotNull(status);
+        System.out.println(status);
     }
 }
