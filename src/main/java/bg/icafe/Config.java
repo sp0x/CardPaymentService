@@ -1,6 +1,6 @@
 package bg.icafe;
 
-import bg.icafe.network.MqConfig;
+import bg.icafe.network.mq.MqConfig;
 import bg.icafe.network.http.HttpConfig;
 import lv.tietoenator.cs.ecomm.merchant.ConfigurationException;
 import lv.tietoenator.cs.ecomm.merchant.Merchant;

@@ -32,7 +32,6 @@ public class ECOMMHelperTest {
         assertNotNull(result);
         assertNotNull(result.getTransactionId());
         assertNotNull(result.getUrl());
-        System.out.println(result.getUrl());
     }
 
     @Test
@@ -42,7 +41,6 @@ public class ECOMMHelperTest {
         assertNotNull(result.getTransactionId());
         TransactionResult status = helper.getTransactionStatus(result.getTransactionId(), true);
         assertNotNull(status);
-        System.out.println(status);
         assertEquals(status.getResult(), TransactionResultType.Created);
     }
 }

@@ -1,6 +1,7 @@
 package bg.icafe.network.http;
 
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.ServletHandler;
 
 import java.net.InetSocketAddress;
 import java.util.Properties;
@@ -13,7 +14,9 @@ public class TransactionCallbackServer {
     public TransactionCallbackServer(HttpConfig config, Properties props){
         _listenAddr = new InetSocketAddress(config.getHost(), config.getPort());
         _server = new Server(_listenAddr);
-        _server.setHandler(new CallbackHandler(props));
+        ServletHandler handler = new ServletHandler();
+        _server.setHandler(handler);
+        handler.addServletWithMapping(TransactionCallbackServlet.class, "/*");
     }
 
     public void listenAndBlock() throws Exception {
