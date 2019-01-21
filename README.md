@@ -22,7 +22,7 @@ Example transaction request:
   "recurringId": "...", //Transaction id that you get after an initial payment. For initial transactions this isn't required.
   "description": "Some description of the transaction",
   "type": "initial|secondary", //Initial is always placed for the first transaction.
-  "amount": 1.0 // the amount of the transaction (double)
+  "amount": 1 // the amount of the transaction (int)
 }
 ```
 Initial transactions start a recurring payment log.  

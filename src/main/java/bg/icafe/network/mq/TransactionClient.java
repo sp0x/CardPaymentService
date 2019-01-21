@@ -74,11 +74,11 @@ public class TransactionClient
         return _transactionHelper;
     }
 
-    public RecurringPaymentResult handleTransactionRequest(String type, String recurringId, Double amount, String ip, String description) throws Exception {
+    public RecurringPaymentResult handleTransactionRequest(String type, String recurringId, int amount, String ip, String description) throws Exception {
         //Handle the request
         RecurringPaymentResult result = null;
         if(type.equals("initial")){
-            result = _transactionHelper.initializeRecurring(null, Double.toString(amount), ip, description);
+            result = _transactionHelper.initializeRecurring(null, Integer.toString(amount), ip, description);
         }else if(type.equals("secondary")){
             if(recurringId==null || recurringId.length()==0){
                 throw new Exception("Recurring id is missing.");
@@ -118,7 +118,7 @@ public class TransactionClient
             throw new Exception("Client ip is required.");
         }else{
             String ip = bodyJson.getString("ip");
-            Double amount = bodyJson.getDouble("amount");
+            int amount = bodyJson.getInt("amount");
             logger.info("Received transaction request [" + type + "] @" + ip + " - " + description);
             JSONObject reply = new JSONObject();
             try{

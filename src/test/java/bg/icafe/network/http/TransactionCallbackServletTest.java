@@ -58,6 +58,7 @@ public class TransactionCallbackServletTest extends ClientServerTest {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+        System.out.println(responseBody);
         assertNotNull(responseBody);
         assertTrue(responseBody.trim().contains("Transaction failed"));
         assertTrue(responseBody.trim().contains("Declined"));

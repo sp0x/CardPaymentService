@@ -74,6 +74,9 @@ public class RecurringPaymentResult
             paymentResult.rrn = rrn;
             paymentResult.approvalCode = approvalCode;
             paymentResult.result = parseRecurringResultType(result);
+            if(!res.containsKey("RESULT") && isInitial){
+                paymentResult.result = RecurringPaymentResultType.Ok;
+            }
             paymentResult.isInitial = isInitial;
             paymentResult.url = getClientRedirectionUrl(transactionId);
             return paymentResult;

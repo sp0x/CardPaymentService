@@ -50,7 +50,7 @@ public class ECOMMHelper
         Payment p = createPayment(paymentId);
         p.setDescription(description);
         String recurringResult = this.merch.startSMSTrans(amount, currency, clientIp, description);
-        //System.out.println("Payment response: " + recurringResult);
+        System.out.println("Payment response: " + recurringResult);
         Map<String,String> parsedResult = this.parser.parse(recurringResult);
         if(parsedResult.containsKey("error")){
             throw new TransactionException(parsedResult.get("error"));
