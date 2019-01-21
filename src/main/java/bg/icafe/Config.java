@@ -1,6 +1,7 @@
 package bg.icafe;
 
 import bg.icafe.network.MqConfig;
+import bg.icafe.network.http.HttpConfig;
 import lv.tietoenator.cs.ecomm.merchant.ConfigurationException;
 import lv.tietoenator.cs.ecomm.merchant.Merchant;
 import org.apache.commons.lang3.tuple.Pair;
@@ -24,16 +25,48 @@ public class Config
         return CURRENCY_BG;
     }
 
+    public static Properties getGeneralSettings() throws IOException {
+        Properties props = new Properties();
+        String filename = "settings.properties";
+        InputStream input = Main.class.getClassLoader().getResourceAsStream(filename);
+        props.load(input);
+        return props;
+    }
+
+    /**
+     *
+     * @return
+     * @throws IOException
+     * @throws ConfigurationException
+     */
+    public static HttpConfig getHttpConfiguration() throws IOException, ConfigurationException {
+        Properties props = getGeneralSettings();
+        String host = System.getenv("HTTP_HOST");
+        String port = System.getenv("HTTP_PORT");
+        if(host==null || host.length()==0){
+            host = props.getProperty("http.host");
+        }
+        if(port==null || port.length()==0){
+            port = props.getProperty("http.port");
+        }
+        if(host==null || host.length()==0){
+            throw new ConfigurationException("Http host not set!");
+        }
+        if(port==null || port.length()==0){
+            throw new ConfigurationException("Http host not set!");
+        }
+        HttpConfig httpConfig = new HttpConfig(host, Integer.parseInt(port));
+        return httpConfig;
+    }
+
+
     /**
      * Reads environment configuration.
      * @return
      * @throws Exception
      */
     public static MqConfig readMqConfiguration() throws Exception {
-        Properties props = new Properties();
-        String filename = "settings.properties";
-        InputStream input = Main.class.getClassLoader().getResourceAsStream(filename);
-        props.load(input);
+        Properties props = getGeneralSettings();
         String host = System.getenv("MQ_HOST");
 
         if(host==null || host.length()==0){

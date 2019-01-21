@@ -1,5 +1,6 @@
 package bg.icafe;
 
+import bg.icafe.payment.Payment;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

@@ -1,5 +1,9 @@
 package bg.icafe;
 
+import bg.icafe.payment.ECOMMHelper;
+import bg.icafe.payment.RecurringPaymentResult;
+import bg.icafe.payment.TransactionResult;
+import bg.icafe.payment.TransactionResultType;
 import lv.tietoenator.cs.ecomm.merchant.Merchant;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;

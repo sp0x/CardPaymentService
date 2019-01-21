@@ -1,7 +1,7 @@
 package bg.icafe.network;
 
-import bg.icafe.ECOMMHelper;
-import bg.icafe.RecurringPaymentResult;
+import bg.icafe.payment.ECOMMHelper;
+import bg.icafe.payment.RecurringPaymentResult;
 import com.rabbitmq.client.*;
 import org.json.JSONObject;
 

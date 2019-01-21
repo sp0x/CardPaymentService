@@ -17,5 +17,10 @@
     <orderEntry type="library" name="Maven: org.json:json:20151123" level="project" />
     <orderEntry type="library" name="Maven: lv.tietoenator.cs.ecomm.merchant:ecomm_merchant:1.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.8.1" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-server:9.4.14.v20181114" level="project" />
+    <orderEntry type="library" name="Maven: javax.servlet:javax.servlet-api:3.1.0" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-http:9.4.14.v20181114" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-util:9.4.14.v20181114" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-io:9.4.14.v20181114" level="project" />
   </component>
 </module>

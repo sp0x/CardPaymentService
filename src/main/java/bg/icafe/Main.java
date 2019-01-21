@@ -3,6 +3,10 @@ package bg.icafe;
 import bg.icafe.network.Listener;
 import bg.icafe.network.MqConfig;
 import bg.icafe.network.TransactionListener;
+import bg.icafe.network.http.HttpConfig;
+import bg.icafe.network.http.TransactionCallbackServer;
+import bg.icafe.payment.ECOMMHelper;
+import lv.tietoenator.cs.ecomm.merchant.ConfigurationException;
 import lv.tietoenator.cs.ecomm.merchant.Merchant;
 
 import java.io.IOException;
@@ -33,7 +37,19 @@ public class Main {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        hang();
+        HttpConfig httpConfig = null;
+        try {
+            httpConfig = Config.getHttpConfiguration();
+            TransactionCallbackServer callbackListener = new TransactionCallbackServer(httpConfig, Config.getGeneralSettings());
+            callbackListener.listenAndBlock();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ConfigurationException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private static void hang(){
