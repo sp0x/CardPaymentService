@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import java.util.Properties;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 
 public class ECOMMHelperTest {
@@ -26,6 +27,8 @@ public class ECOMMHelperTest {
         RecurringPaymentResult result = helper.initializeRecurring(null, "1",test_ip, "Recurring payment init test.");
         assertNotNull(result);
         assertNotNull(result.getTransactionId());
+        assertNotNull(result.getUrl());
+        System.out.println(result.getUrl());
     }
 
     @Test
@@ -36,5 +39,6 @@ public class ECOMMHelperTest {
         TransactionResult status = helper.getTransactionStatus(result.getTransactionId(), true);
         assertNotNull(status);
         System.out.println(status);
+        assertEquals(status.getResult(), TransactionResultType.Created);
     }
 }

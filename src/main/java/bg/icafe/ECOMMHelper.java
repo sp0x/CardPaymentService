@@ -22,6 +22,7 @@ public class ECOMMHelper
     private final Properties props;
     private final ECOMMResponseParser parser;
     private String currency;
+    private RecurringPaymentResult.Factory _resultFactory;
 
     public ECOMMHelper(String clientIp, Merchant merchant, Properties props){
         this.merch = merchant;
@@ -29,6 +30,7 @@ public class ECOMMHelper
         this.props = props;
         this.parser = new ECOMMResponseParser();
         this.currency = Config.getCurrency();
+        _resultFactory = new RecurringPaymentResult.Factory(props);
     }
 
     public String getCurrency() {
@@ -58,7 +60,8 @@ public class ECOMMHelper
         String recurringResult = this.merch.startSMSTrans(amount, currency, clientIp, description);
         //System.out.println("Payment response: " + recurringResult);
         Map<String,String> parsedResult = this.parser.parse(recurringResult);
-        return RecurringPaymentResult.fromRecurringResult(parsedResult, true);
+        RecurringPaymentResult result = _resultFactory.fromRecurringResult(parsedResult, true);
+        return result;
     }
 
     /**
@@ -74,7 +77,7 @@ public class ECOMMHelper
         String currency = Config.getCurrency();
         String recurringResult = this.merch.makeRP(recurringId, amount, currency, clientIp, description, props);
         Map<String,String> result = this.parser.parse(recurringResult);
-        return RecurringPaymentResult.fromRecurringResult(result, false);
+        return _resultFactory.fromRecurringResult(result, false);
     }
 
     public TransactionResult issueRefund(String transactionId){
@@ -90,11 +93,6 @@ public class ECOMMHelper
         return (TransactionResult) TransactionResult.fromResult(result, isRecurring);
     }
 
-    public String getClientRedirectionUrl(String transactionId){
-        String clientUrl = props.getProperty("bank.server.clienturl");
-        String output = clientUrl + "?trans_id=" +  URLEncoder.encode(transactionId);
-        return output;
-    }
 
 
     public void delete(String recurringId){

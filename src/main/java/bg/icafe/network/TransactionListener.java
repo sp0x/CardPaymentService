@@ -48,6 +48,24 @@ public class TransactionListener
          */
     }
 
+    public RecurringPaymentResult handleTransactionRequest(String type, String recurringId, Double amount, String ip, String description) throws Exception {
+        //Handle the request
+        RecurringPaymentResult result = null;
+        if(type.equals("initial")){
+            result = _transactionHelper.initializeRecurring(null, Double.toString(amount), ip, description);
+        }else if(type.equals("secondary")){
+            if(recurringId==null || recurringId.length()==0){
+                throw new Exception("Recurring id is missing.");
+            }
+            result = _transactionHelper.makeRecurring(recurringId, Double.toString(amount), ip, description);
+        }
+
+        if(result==null){
+            throw new Exception("Transaction type not supported.");
+        }
+        return result;
+    }
+
     /**
      *
      * @param consumerTag
@@ -67,34 +85,18 @@ public class TransactionListener
 
         String type = bodyJson.getString("type");
         String description = bodyJson.getString("description");
+        String recurringId = bodyJson.getString("recurringId");
         if(!bodyJson.has("ip")){
             throw new Exception("Client ip is required.");
         }else{
             String ip = bodyJson.getString("ip");
             Double amount = bodyJson.getDouble("amount");
-            RecurringPaymentResult result = null;
-            //Handle the request
-            if(type=="initial"){
-                result = _transactionHelper.initializeRecurring(null, Double.toString(amount), ip, description);
-            }else if(type=="secondary"){
-                if(!bodyJson.has("recurringId")){
-                    throw new Exception("Recurring id is missing.");
-                }
-                String recurringId = bodyJson.getString("recurringId");
-                result = _transactionHelper.makeRecurring(recurringId, Double.toString(amount), ip, description);
-            }
-
-            if(result==null){
-                throw new Exception("Transaction type not supported.");
-            }
-            String url = _transactionHelper.getClientRedirectionUrl(result.getTransactionId());
+            RecurringPaymentResult result = handleTransactionRequest(type, recurringId, amount, ip, description);
             JSONObject reply = new JSONObject();
-
-            reply.put("url", url);
+            reply.put("url", result.getUrl());
             reply.put("transactionId", result.getTransactionId());
             reply.put("result", result.getResult());
             reply.put("resultCode", result.getResultCode());
-
             sendReply(replyTo, reply, properties.getCorrelationId());
             chan.basicAck(deliveryTag, false);
         }
