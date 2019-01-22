@@ -23,7 +23,7 @@ To test the connectivity with this service, look at the folder `integrationTests
 ## Exchanges:
 `sales`:
 - sales.transaction_request - Queue for transaction requests  
-Example transaction request:
+Example transaction request:  
 ```json
 { 
   "ip": "clientIp",
@@ -43,8 +43,9 @@ Example transaction request:
    //this url after the transaction goes through with success
 }
 ```
+
 Initial transactions start a recurring payment log.  
-Transaction reply:
+Transaction reply:  
 ```json
 {
   "url": "The url to which to redirect the user",
