@@ -2,6 +2,8 @@ package bg.icafe.payment;
 
 import redis.clients.jedis.Jedis;
 
+import java.util.Set;
+
 public class TransactionStateCacher {
     private final Jedis _jedis;
     public TransactionStateCacher(){
@@ -12,12 +14,31 @@ public class TransactionStateCacher {
                        String correlationId,
                        String replyTo,
                        String redirectOnError,
-                       String redirectOnOk){
+                       String redirectOnOk,
+                       String expirationDate){
         _jedis.set(getKey(result.getTransactionId(), "correlationId"), correlationId);
         _jedis.set(getKey(result.getTransactionId(), "from"), replyTo);
         _jedis.set(getKey(result.getTransactionId(), "state"), TransactionState.Open.toString());
         _jedis.set(getKey(result.getTransactionId(), "redirectOnError"), redirectOnError);
         _jedis.set(getKey(result.getTransactionId(), "redirectOnOk"), redirectOnOk);
+        _jedis.set(getKey(result.getTransactionId(), "expirationDate"), expirationDate);
+        String recurringId = result.getRecurringId();
+        if(recurringId!=null && recurringId.length()>0){
+            _jedis.sadd("transactions:recurring:" + result.getRecurringId(), result.getTransactionId());
+        }
+    }
+
+    public String getTransactionExpiry(String transactionId) {
+        return _jedis.get(getKey(transactionId, "expirationDate"));
+    }
+
+    /**
+     * Gets the transaction id's linked to a recurring payment.
+     * @param recurringPaymentId
+     * @return
+     */
+    public Set<String> getRecurringTransactions(String recurringPaymentId){
+        return _jedis.smembers("transactions:recurring:" + recurringPaymentId);
     }
 
     /**
@@ -64,4 +85,5 @@ public class TransactionStateCacher {
         TransactionRedirections output = new TransactionRedirections(onFailed, onOk);
         return output;
     }
+
 }

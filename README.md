@@ -21,6 +21,9 @@ Example transaction request:
 ```json
 { 
   "ip": "clientIp",
+  "paymentId": "paymentId", //A unique ID to link with the registration
+  "expirationDate": "0119", //The date on which the recurring transaction expires.
+  //Format for expiry is MMYY
   "recurringId": "...", //Transaction id that you get after an initial payment. 
   // For initial transactions this isn't required.
   "description": "Some description of the transaction",// Description or Order number to show to the client
@@ -30,7 +33,6 @@ Example transaction request:
   //this url after the transaction fails
   "redirectOnOk": "urlToRedirectOnSuccess" //Optional, the client is redirected to
    //this url after the transaction goes through with success
-   
 }
 ```
 Initial transactions start a recurring payment log.  
@@ -39,7 +41,9 @@ Transaction reply:
 {
   "url": "The url to which to redirect the user",
   "transactionId": "the id of the transaction",
-  "result": "Ok|Failed"
+  "result": "ok|failed|error",
+  "error": "Request error message",
+  "type": "transactionCreation"
 }
 ```
 The reply is sent back to the `replyTo` header of the message!  
@@ -47,6 +51,7 @@ After filling in the payment details, you would get another reply to the same `r
 ```json
 {
   "success": false, //True or false
+  "type": "transactionFinished",
   "transactionId": "idOfTheTransaction", //Transaction id
   "errorStatus": "Declined", //If failed The status of the transaction
   "error": "Error message from the payment processing platform" //If failed message from backend 

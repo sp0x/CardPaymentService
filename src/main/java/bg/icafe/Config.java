@@ -122,4 +122,8 @@ public class Config
         }
         return Pair.of(merchant, props);
     }
+
+    public static String getDefaultLanguage() {
+        return "bg_BG";
+    }
 }

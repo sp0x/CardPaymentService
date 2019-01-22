@@ -9,6 +9,7 @@ public class RecurringPaymentResult
     private String transactionId;
     private String url;
     private RecurringPaymentResultType result;
+    private String recurringId;
     private String resultCode;
     private String rrn;
     private String approvalCode;
@@ -46,6 +47,10 @@ public class RecurringPaymentResult
         return isInitial;
     }
 
+    public String getRecurringId() {
+        return recurringId;
+    }
+
     public static class Factory {
         private final Properties props;
 
@@ -74,6 +79,7 @@ public class RecurringPaymentResult
             paymentResult.rrn = rrn;
             paymentResult.approvalCode = approvalCode;
             paymentResult.result = parseRecurringResultType(result);
+            paymentResult.recurringId = res.get("recurringPaymentId");
             if(!res.containsKey("RESULT") && isInitial){
                 paymentResult.result = RecurringPaymentResultType.Ok;
             }

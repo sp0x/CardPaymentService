@@ -6,6 +6,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Properties;
 
 import static junit.framework.Assert.assertEquals;
@@ -27,7 +29,9 @@ public class ECOMMHelperTest {
     public void initializeRecurring() {
         RecurringPaymentResult result = null;
         try {
-            result = helper.initializeRecurring(null, "1",test_ip, "Recurring payment init test.", null);
+            String expiry = "1019";
+            result = helper.initializeRecurring(null, "1",test_ip, "Recurring payment init test.",
+                    Config.getDefaultLanguage(), null, expiry, null);
         } catch (TransactionException e) {
             e.printStackTrace();
         }
@@ -35,12 +39,33 @@ public class ECOMMHelperTest {
         assertNotNull(result.getTransactionId());
         assertNotNull(result.getUrl());
     }
+//
+//    @Test
+//    public void makeRecurring() {
+//        RecurringPaymentResult result = null;
+//        try {
+//            String expiry = "1019";
+//            result = helper.initializeRecurring(null, "1",test_ip, "Recurring payment init test.",
+//                    Config.getDefaultLanguage(), null, expiry, null);
+//            String recurringId = result.getTransactionId();
+//            RecurringPaymentResult res = helper.makeRecurring(recurringId, "100", "85.85.85.85", "Some description", null);
+//            System.out.println(res.getResult());
+//            System.out.println(res.getResultCode());
+//        } catch (TransactionException e) {
+//            e.printStackTrace();
+//        }
+//        assertNotNull(result);
+//        assertNotNull(result.getTransactionId());
+//        assertNotNull(result.getUrl());
+//    }
 
     @Test
     public void getTransactionStatus() {
         RecurringPaymentResult result = null;
         try {
-            result = helper.initializeRecurring(null, "1",test_ip, "Recurring payment init test.", null);
+            String expiry = "1019";
+            result = helper.initializeRecurring(null, "1",test_ip, "Recurring payment init test.", Config.getDefaultLanguage(),
+                    null, expiry, null);
         } catch (TransactionException e) {
             e.printStackTrace();
         }
