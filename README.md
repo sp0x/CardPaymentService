@@ -8,7 +8,7 @@ For initial payments
 
 For secondary payments
 * Call the queue with the recurringId(or transaction id from ^ )
-* The response is a direct payment response.
+* The response is a direct payment response with no user interaction.
 
          
 ## Running the service
