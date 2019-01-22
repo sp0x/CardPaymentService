@@ -24,27 +24,31 @@ To test the connectivity with this service, look at the folder `integrationTests
 `sales`:
 - sales.transaction_request - Queue for transaction requests  
 Example transaction request:  
-```js
-var request = { 
+```json
+{ 
   "ip": "clientIp",
-  "paymentId": "paymentId", //Optional, unique ID to link with the registration  
-  //If you don't specify it initially, use the transaction id from the first transaction  
-  //for this recurring payment.  
-  //For initial transactions this is optional.  
-  "expirationDate": "0119", //The date on which the recurring transaction expires.  
-  //Format for expiry is MMYY  
-  //Optional for secondary transactions  
-  "description": "Some description of the transaction",// Description or Order number to show to the client   
-  "type": "initial|secondary", //Initial is always placed for the first transaction.  
-  "amount": 1, //The amount of the transaction (int), in this case it's 1 ст.  
-  "redirectOnError": "urlToRedirectOnError", //Optional, the client is redirected to  
-  //this url after the transaction fails  
-  "redirectOnOk": "urlToRedirectOnSuccess" //Optional, the client is redirected to  
-   //this url after the transaction goes through with success  
+  "paymentId": "paymentId",
+  "expirationDate": "0119", 
+  "description": "Some description of the transaction",   
+  "type": "initial|secondary",
+  "amount": 1,
+  "redirectOnError": "urlToRedirectOnError",
+  "redirectOnOk": "urlToRedirectOnSuccess"
 }
 ```
-
+* `paymentId` - Optional, unique ID to link with the registration  
+If you don't specify it initially, use the transaction id from the first transaction for this recurring payment.  
+For initial transactions this is optional.  
+* `expirationDate` - MMYY The date on which the recurring transaction expires.  
 Initial transactions start a recurring payment log.  
+Optional for secondary transactions  
+* `description` -  Description or Order number to show to the client
+* `type` - Whether this is the first payment request, or a secondary.
+* `amount` - The amount of the transaction (int)
+* `redirectOnError` - Optional, the client is redirected to this url after the transaction fails  
+* `redirectOnOk` - Optional, the client is redirected to this url after the transaction goes through with success
+* `currency` - 3 Digit currency code. Default is 975 (Bulgarian Leva)
+  
 Transaction reply:  
 ```json
 {
