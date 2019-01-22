@@ -1,12 +1,15 @@
 # Service for recurring payments using FiBank's ECOMM service.
 
-Workflow
+Workflow  
+For initial payments
+* Call the `sales.transaction_request` queue
+* Send the user to the resulting `url`, with a redirection for success & failure.
+* Optional: continuously listen for updates for each payment request.
 
-    * This service gets a payment request(with callback urls)
-    * it issues it to the bank ECOMM
-    * we get a transaction id and send it back to the caller.
-    * The caller comes back after making/declining/timing out the purchase and calls us to finalize.
-    * We finalize the transaction payment and log it.
+For secondary payments
+* Call the queue with the recurringId(or transaction id from ^ )
+* The response is a direct payment response.
+
          
 ## Running the service
 To run the service you need:
