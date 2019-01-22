@@ -13,6 +13,9 @@ To run the service you need:
  - Maven / Docker
  - Redis  
 Run the `run.sh` script to test and run the service.
+
+## Testing
+To test the connectivity with this service, look at the folder `integrationTests`
   
 ## Exchanges:
 `sales`:
