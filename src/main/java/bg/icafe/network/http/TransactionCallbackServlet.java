@@ -120,12 +120,14 @@ public class TransactionCallbackServlet extends HttpServlet {
         TransactionClient tc = TransactionClient.getInstance();
         ECOMMHelper ec = tc.getECOMM();
         TransactionRedirections redirections = tc.getRedirectionsForTransaction(transactionId);
+        TransactionResult tres = ec.getTransactionStatus(transactionId, true);
         if(error!=null && error.length()>0){
             //An error occurred.
-            TransactionResult tres = ec.getTransactionStatus(transactionId, true);
             tc.reportFailedTransaction(transactionId, error, tres);
             onTransactionFailed(resp, writer, redirections, tres);
         }else{
+            //System.out.println(tres);
+            //ec.makeRecurring(tres.getRecurringPaymentId(), "1", "85.85.85.85", "Description", null);
             tc.reportSuccessfullTransaction(transactionId);
             if(redirections.hasOk()){
                 resp.sendRedirect(resp.encodeRedirectURL(redirections.getOnOk()));

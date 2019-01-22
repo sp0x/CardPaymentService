@@ -106,7 +106,7 @@ public class ECOMMHelper
         System.out.println("Recurring id: " + recurringPaymentId);
         //System.out.println("Expires: " + expires);
 
-        String recurringResult = this.merch.makeRP(recurringPaymentId, amount, currency, clientIp, p.getDescription(), props);
+        String recurringResult = this.merch.makeRP(recurringPaymentId, amount, currency, clientIp, p.getDescription(), null);
         System.out.println("Recurring response: " + recurringResult);
         Map<String,String> parsedResult = this.parser.parse(recurringResult);
         parsedResult.put("recurringPaymentId", recurringPaymentId);

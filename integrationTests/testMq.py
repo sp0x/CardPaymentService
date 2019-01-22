@@ -63,7 +63,8 @@ def _on_response(ch, method, props, body):
     print(body_json)
     if body_json['type']== "transactionFinished":
         if body_json['success']==True:
-            send_secondary(body_json['transactionId'])
+            pass
+            #send_secondary(body_json['transactionId'])
 
 
 
