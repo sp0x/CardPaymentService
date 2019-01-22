@@ -23,6 +23,7 @@ To test the connectivity with this service, look at the folder `integrationTests
 ## Exchanges:
 `sales`:
 - sales.transaction_request - Queue for transaction requests  
+
 Example transaction request:  
 ```json
 { 
@@ -36,6 +37,7 @@ Example transaction request:
   "redirectOnOk": "urlToRedirectOnSuccess"
 }
 ```
+Arguments:
 * `paymentId` - Optional, unique ID to link with the registration  
 If you don't specify it initially, use the transaction id from the first transaction for this recurring payment.  
 For initial transactions this is optional.  
