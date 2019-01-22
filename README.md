@@ -21,14 +21,16 @@ Example transaction request:
 ```json
 { 
   "ip": "clientIp",
-  "paymentId": "paymentId", //A unique ID to link with the registration
+  "paymentId": "paymentId", //Optional, unique ID to link with the registration
+  //If you don't specify it initially, use the transaction id from the first transaction
+  //for this recurring payment.
+  //For initial transactions this is optional.
   "expirationDate": "0119", //The date on which the recurring transaction expires.
   //Format for expiry is MMYY
-  "recurringId": "...", //Transaction id that you get after an initial payment. 
-  // For initial transactions this isn't required.
+  //Optional for secondary transactions
   "description": "Some description of the transaction",// Description or Order number to show to the client
   "type": "initial|secondary", //Initial is always placed for the first transaction.
-  "amount": 1, // the amount of the transaction (int)
+  "amount": 1, //The amount of the transaction (int), in this case it's 1 ст.
   "redirectOnError": "urlToRedirectOnError", //Optional, the client is redirected to
   //this url after the transaction fails
   "redirectOnOk": "urlToRedirectOnSuccess" //Optional, the client is redirected to
