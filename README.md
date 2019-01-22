@@ -21,10 +21,16 @@ Example transaction request:
 ```json
 { 
   "ip": "clientIp",
-  "recurringId": "...", //Transaction id that you get after an initial payment. For initial transactions this isn't required.
-  "description": "Some description of the transaction",
+  "recurringId": "...", //Transaction id that you get after an initial payment. 
+  // For initial transactions this isn't required.
+  "description": "Some description of the transaction",// Description or Order number to show to the client
   "type": "initial|secondary", //Initial is always placed for the first transaction.
-  "amount": 1 // the amount of the transaction (int)
+  "amount": 1, // the amount of the transaction (int)
+  "redirectOnError": "urlToRedirectOnError", //Optional, the client is redirected to
+  //this url after the transaction fails
+  "redirectOnOk": "urlToRedirectOnSuccess" //Optional, the client is redirected to
+   //this url after the transaction goes through with success
+   
 }
 ```
 Initial transactions start a recurring payment log.  
@@ -33,11 +39,20 @@ Transaction reply:
 {
   "url": "The url to which to redirect the user",
   "transactionId": "the id of the transaction",
-  "result": "the result of the transaction",
-  "resultCode": "code"
+  "result": "Ok|Failed"
 }
 ```
-The reply is sent back to the `replyTo` header of the message!
+The reply is sent back to the `replyTo` header of the message!  
+After filling in the payment details, you would get another reply to the same `replyTo` dest.
+```json
+{
+  "success": false, //True or false
+  "transactionId": "idOfTheTransaction", //Transaction id
+  "errorStatus": "Declined", //If failed The status of the transaction
+  "error": "Error message from the payment processing platform" //If failed message from backend 
+  
+}
+```
 
 ## Configuration:
 Merchant configuration is given in the file `merchant.properties`  
