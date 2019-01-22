@@ -1,14 +1,14 @@
 package bg.icafe.network.mq;
 
 import bg.icafe.Config;
-import bg.icafe.payment.ECOMMHelper;
-import bg.icafe.payment.RecurringPaymentResult;
+import bg.icafe.payment.*;
 import com.rabbitmq.client.*;
 import lv.tietoenator.cs.ecomm.merchant.Merchant;
 import org.apache.commons.lang3.tuple.Pair;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import redis.clients.jedis.Jedis;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -26,6 +26,7 @@ public class TransactionClient
     private final ECOMMHelper _transactionHelper;
     private static TransactionClient _instance;
     private static final Logger logger = LoggerFactory.getLogger(TransactionClient.class);
+    private final TransactionStateCacher _transactionCacher;
 
 
     public static TransactionClient getInstance() throws Exception {
@@ -43,6 +44,8 @@ public class TransactionClient
     private TransactionClient(Listener base, ECOMMHelper helper) throws IOException {
         _base = base;
         _transactionHelper = helper;
+        _transactionCacher = new TransactionStateCacher();
+
         Channel chan = base.getChannel();
         chan.exchangeDeclare(EXCHANGE_SALES, BuiltinExchangeType.TOPIC, true);
         chan.queueDeclare(QUEUE_TRANSACTIONS, true, false, false, null);
@@ -74,23 +77,27 @@ public class TransactionClient
         return _transactionHelper;
     }
 
-    public RecurringPaymentResult handleTransactionRequest(String type, String recurringId, int amount, String ip, String description) throws Exception {
+    public RecurringPaymentResult handleTransactionRequest(String type,
+                                                           String recurringId,
+                                                           int amount, String ip,
+                                                           String description,
+                                                           String params) throws Exception {
         //Handle the request
         RecurringPaymentResult result = null;
         if(type.equals("initial")){
-            result = _transactionHelper.initializeRecurring(null, Integer.toString(amount), ip, description);
+            result = _transactionHelper.initializeRecurring(null, Integer.toString(amount), ip, description, params);
         }else if(type.equals("secondary")){
             if(recurringId==null || recurringId.length()==0){
                 throw new Exception("Recurring id is missing.");
             }
-            result = _transactionHelper.makeRecurring(recurringId, Double.toString(amount), ip, description);
+            result = _transactionHelper.makeRecurring(recurringId, Double.toString(amount), ip, description, params);
         }
-
         if(result==null){
             throw new Exception("Transaction type not supported.");
         }
         return result;
     }
+
 
     /**
      *
@@ -112,7 +119,11 @@ public class TransactionClient
 
         String type = bodyJson.getString("type");
         String description = bodyJson.getString("description");
+        Object redirectOnError = bodyJson.get("redirectOnError");
+        Object redirectOnOk = bodyJson.get("redirectOnOk");
         Object recId = bodyJson.get("recurringId");
+        Object paramsObj = bodyJson.has("params") ? bodyJson.get("params") : null;
+        String params = paramsObj!=null ? paramsObj.toString() : "";
         String recurringId = recId==null ? null : recId.toString();
         if(!bodyJson.has("ip")){
             throw new Exception("Client ip is required.");
@@ -122,11 +133,15 @@ public class TransactionClient
             logger.info("Received transaction request [" + type + "] @" + ip + " - " + description);
             JSONObject reply = new JSONObject();
             try{
-                RecurringPaymentResult result = handleTransactionRequest(type, recurringId, amount, ip, description);
+                RecurringPaymentResult result = handleTransactionRequest(type, recurringId, amount, ip, description, params);
                 reply.put("url", result.getUrl());
                 reply.put("transactionId", result.getTransactionId());
                 reply.put("result", result.getResult());
                 reply.put("resultCode", result.getResultCode());
+                String transId = result.getTransactionId();
+                if(transId!=null && transId.length()>0){
+                    saveOpenTransaction(result, correlationId, replyTo, redirectOnError, redirectOnOk);
+                }
             }catch(Exception ex){
                 reply.put("resultCode", "err");
                 reply.put("error", ex.getMessage());
@@ -155,12 +170,47 @@ public class TransactionClient
     }
 
 
-    public void reportFailedTransaction(String transactionId, String error) {
-
+    public void reportFailedTransaction(String transactionId, String error, TransactionResult statusResult) throws IOException {
+        _transactionCacher.closeFailed(transactionId, error, statusResult);
+        TransactionOrigin origin = _transactionCacher.getTransactionOriginInfo(transactionId);
+        if(origin!=null){
+            JSONObject reply = new JSONObject();
+            reply.put("success", false);
+            reply.put("error", error);
+            reply.put("errorStatus", statusResult.getResult().toString());
+            reply.put("transactionId", transactionId);
+            sendReply(origin.getFrom(), reply, origin.getCorrelationId());
+        }
     }
 
-    public void reportSuccessfullTransaction(String transactionId) {
-
+    public void reportSuccessfullTransaction(String transactionId) throws IOException {
+        TransactionOrigin origin = _transactionCacher.getTransactionOriginInfo(transactionId);
+        _transactionCacher.closeSuccessfull(transactionId);
+        if(origin!=null){
+            JSONObject reply = new JSONObject();
+            reply.put("success", true);
+            reply.put("transactionId", transactionId);
+            sendReply(origin.getFrom(), reply, origin.getCorrelationId());
+        }
     }
 
+
+    /**
+     * Saves an open transaction
+     * @param result
+     * @param correlationId
+     * @param replyTo
+     */
+    private void saveOpenTransaction(RecurringPaymentResult result,
+                                     String correlationId,
+                                     String replyTo,
+                                     Object redirectOnError,
+                                     Object redirectOnOk) {
+        _transactionCacher.create(result, correlationId, replyTo, redirectOnError!=null ? redirectOnError.toString(): "",
+                redirectOnOk!=null ? redirectOnOk.toString() : "");
+    }
+
+    public TransactionRedirections getRedirectionsForTransaction(String transactionId) {
+        return _transactionCacher.getRedirectionsForTransaction(transactionId);
+    }
 }

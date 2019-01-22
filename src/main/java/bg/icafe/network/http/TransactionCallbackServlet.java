@@ -3,6 +3,7 @@ package bg.icafe.network.http;
 import bg.icafe.Config;
 import bg.icafe.network.mq.TransactionClient;
 import bg.icafe.payment.ECOMMHelper;
+import bg.icafe.payment.TransactionRedirections;
 import bg.icafe.payment.TransactionResult;
 import lv.tietoenator.cs.ecomm.merchant.Merchant;
 import org.apache.commons.lang3.tuple.Pair;
@@ -40,14 +41,71 @@ public class TransactionCallbackServlet extends HttpServlet {
                 e.printStackTrace();
             }
         }else if(spath.equals("/failed")){
-            handleFailedTransaction(req, resp);
+            try {
+                handleFailedTransaction(req, resp);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    private void handleFailedTransaction(HttpServletRequest req, HttpServletResponse resp) {
+    /**
+     * Handles a request saying the transaction failed.
+     * @param req
+     * @param resp
+     * @throws Exception
+     */
+    private void handleFailedTransaction(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+        OutputStream outStream = resp.getOutputStream();
+        PrintWriter writer = new PrintWriter(outStream);
 
+        String transactionId = req.getParameter("trans_id");
+        TransactionClient tc = TransactionClient.getInstance();
+        TransactionRedirections redirections = tc.getRedirectionsForTransaction(transactionId);
+        ECOMMHelper ec = tc.getECOMM();
+
+        TransactionResult tres = ec.getTransactionStatus(transactionId, true);
+        tc.reportFailedTransaction(transactionId, "Failed", tres);
+        onTransactionFailed(resp, writer, redirections, tres);
     }
 
+    /**
+     * Handles the failure of a transaction and what happens with the web request.
+     * @param resp
+     * @param writer
+     * @param redirections
+     * @param tres
+     * @throws IOException
+     */
+    private void onTransactionFailed(HttpServletResponse resp, PrintWriter writer, TransactionRedirections redirections, TransactionResult tres) throws IOException {
+        if(redirections.hasFailed()){
+            resp.sendRedirect(resp.encodeRedirectURL(redirections.getOnFailed()));
+        }else{
+            writer.println("Transaction failed");
+            writer.print("Reason: ");
+            switch(tres.getResult()){
+                case Declined:
+                    writer.println("Declined");
+                    break;
+                case Failed:
+                    writer.println("Failed");
+                    break;
+                case Timeout:
+                    writer.println("Timeout");
+                    break;
+                default:
+                    writer.println("Unknown");
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Handles a request saying the transaction went ok or there as an error.
+     * @param req
+     * @param resp
+     * @throws Exception
+     */
     private void handleSuccessfullTransaction(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         OutputStream outStream = resp.getOutputStream();
         PrintWriter writer = new PrintWriter(outStream);
@@ -61,22 +119,19 @@ public class TransactionCallbackServlet extends HttpServlet {
         }
         TransactionClient tc = TransactionClient.getInstance();
         ECOMMHelper ec = tc.getECOMM();
+        TransactionRedirections redirections = tc.getRedirectionsForTransaction(transactionId);
         if(error!=null && error.length()>0){
             //An error occurred.
-            tc.reportFailedTransaction(transactionId, error);
             TransactionResult tres = ec.getTransactionStatus(transactionId, true);
-            writer.println("Transaction failed");
-            writer.print("Reason: ");
-            switch(tres.getResult()){
-                case Declined:
-                    writer.println("Declined");
-                    break;
-                default:
-                    writer.println("Unknown");
-                    break;
-            }
+            tc.reportFailedTransaction(transactionId, error, tres);
+            onTransactionFailed(resp, writer, redirections, tres);
         }else{
             tc.reportSuccessfullTransaction(transactionId);
+            if(redirections.hasOk()){
+                resp.sendRedirect(resp.encodeRedirectURL(redirections.getOnOk()));
+            }else{
+                writer.println("Success");
+            }
         }
         writer.flush();
     }

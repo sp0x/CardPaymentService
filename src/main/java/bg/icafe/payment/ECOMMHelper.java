@@ -46,7 +46,11 @@ public class ECOMMHelper
      * @param description
      * @return
      */
-    public RecurringPaymentResult initializeRecurring(String paymentId, String amount, String clientIp, String description) throws TransactionException {
+    public RecurringPaymentResult initializeRecurring(String paymentId,
+                                                      String amount,
+                                                      String clientIp,
+                                                      String description,
+                                                      String params) throws TransactionException {
         Payment p = createPayment(paymentId);
         p.setDescription(description);
         String recurringResult = this.merch.startSMSTrans(amount, currency, clientIp, description);
@@ -66,7 +70,11 @@ public class ECOMMHelper
      * @param clientIp
      * @return
      */
-    public RecurringPaymentResult makeRecurring(String recurringId, String amount, String clientIp, String description){
+    public RecurringPaymentResult makeRecurring(String recurringId,
+                                                String amount,
+                                                String clientIp,
+                                                String description,
+                                                String params){
         Payment p = createPayment(recurringId);
         p.setDescription(description);
         String currency = Config.getCurrency();

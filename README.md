@@ -9,7 +9,9 @@ Workflow
     * We finalize the transaction payment and log it.
          
 ## Running the service
-To run the service you would need docker or maven.  
+To run the service you need:
+ - Maven / Docker
+ - Redis  
 Run the `run.sh` script to test and run the service.
   
 ## Exchanges:
@@ -52,7 +54,8 @@ General settings are in the file `settings.properties`
 - mq.user - user
 - mq.pass - pass
 - http.host - Hostname on which the callback HTTP would listen
-- http.port - Port for the callback HTTP server
+- http.port - Port for the callback HTTP server   
+Note that by default this service connects to the redis server on `localhost`
 
 #### Environment 
 Environment variables have higher priority than settings defined in .properties files.  
