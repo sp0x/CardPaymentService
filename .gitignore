@@ -37,3 +37,5 @@ cert/
 /src/main/resources/merchant.properties
 /src/main/resources/settings.properties
 **.iml
+/integrationTests/config.ini
+/integrationTests/config.ini

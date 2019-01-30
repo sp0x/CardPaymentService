@@ -16,8 +16,8 @@
         </repository>
     </repositories>
 
-    <groupId>bg.icafe</groupId>
-    <artifactId>FibankRecurring</artifactId>
+    <groupId>com.cardService</groupId>
+    <artifactId>cardService</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <dependencies>
@@ -95,7 +95,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>bg.icafe.Main</mainClass>
+                            <mainClass>com.cardService.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -116,7 +116,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>bg.icafe.Main</mainClass>
+                            <mainClass>com.cardService.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -133,7 +133,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>bg.icafe.Main</mainClass>
+                    <mainClass>com.cardService.Main</mainClass>
                     <arguments>
                     </arguments>
                 </configuration>

@@ -4,6 +4,7 @@ import threading
 from time import sleep
 import uuid
 import random
+import configparser
 
 # Testing data:
 #   Card: 5169756612906779
@@ -11,9 +12,12 @@ import random
 #   CVC:    311
 
 internal_lock = threading.Lock()
+config = configparser.ConfigParser()
+config.read("config.ini")
 
-hostname = 'mq.icafe.bg'
-credentials = pika.PlainCredentials('admin', 'jenh563e4f')
+hostname = config['config']['mqhost']
+
+credentials = pika.PlainCredentials('admin', config['config']['mqpass'])
 params = pika.ConnectionParameters(hostname, credentials=credentials)
 connection = pika.BlockingConnection(params)
 channel = connection.channel()
