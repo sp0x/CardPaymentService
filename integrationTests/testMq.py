@@ -5,6 +5,11 @@ from time import sleep
 import uuid
 import random
 
+# Testing data:
+#   Card: 5169756612906779
+#   Expiry: 10/2019
+#   CVC:    311
+
 internal_lock = threading.Lock()
 
 hostname = 'mq.icafe.bg'
@@ -63,15 +68,14 @@ def _on_response(ch, method, props, body):
     print(body_json)
     if body_json['type']== "transactionFinished":
         if body_json['success']==True:
-            pass
-            #send_secondary(body_json['transactionId'])
+            send_secondary(body_json['transactionId'])
 
 
 
 channel.basic_consume(_on_response, no_ack=True, queue=callback_queue)
 
-send_initial()
-#send_secondary("oCmietxn8gW1jWIWo9C4ZrOxuaw=")
+#send_initial()
+send_secondary("7e4xpxWWYI5gJP76CT9NU47ifzs=")
 
 while True:
     with internal_lock:

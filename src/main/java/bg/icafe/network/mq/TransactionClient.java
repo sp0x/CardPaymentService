@@ -45,6 +45,7 @@ public class TransactionClient
         //TODO: Lock
         _instance = new TransactionClient(mqListener, helper);
         _instance._isTestMode = generalSettings.getProperty("isTestmode").toLowerCase().equals("true");
+        helper.enableLogging(_instance._isTestMode);
         return _instance;
     }
 
@@ -84,6 +85,18 @@ public class TransactionClient
         return _transactionHelper;
     }
 
+    /**
+     *
+     * @param type
+     * @param recurringId
+     * @param amount
+     * @param ip
+     * @param description
+     * @param expirationDate
+     * @param params
+     * @return
+     * @throws Exception
+     */
     public RecurringPaymentResult handleTransactionRequest(String type,
                                                            String recurringId,
                                                            int amount, String ip,
@@ -178,18 +191,13 @@ public class TransactionClient
                 reply.put("transactionId", result.getTransactionId());
                 reply.put("result", result.getResult().toString().toLowerCase());
                 reply.put("resultCode", result.getResultCode());
+                reply.put("isRegistrationPayment", result.isRegistrationPayment());
                 String transId = result.getTransactionId();
                 if(transId!=null && transId.length()>0){
                     saveOpenTransaction(result, correlationId, replyTo, redirectOnError, redirectOnOk, expirationDate);
                 }
             }catch(TransactionException transEx){
                 fillExceptionReply(reply, transEx);
-//                if(type.equals("secondary")){
-//                    TransactionResult status = _transactionHelper.getTransactionStatus(recurringId, true);
-//                    System.out.println(status);
-//                    reply.put("resultCode", status.getCode());
-//                    reply.put("rnn", status.getRnn());
-//                }
             }
             catch(Exception ex){
                 fillExceptionReply(reply, ex);

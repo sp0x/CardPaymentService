@@ -13,7 +13,10 @@ public class RecurringPaymentResult
     private String resultCode;
     private String rrn;
     private String approvalCode;
-    private boolean isInitial;
+    /**
+     * Whether this payment result was from a recurring payment, or an initial one that's used for registration.
+     */
+    private boolean isRegistrationPayment;
 
     public RecurringPaymentResult(){
 
@@ -43,12 +46,20 @@ public class RecurringPaymentResult
         return approvalCode;
     }
 
-    public boolean isInitial() {
-        return isInitial;
+    /**
+     * Whether this payment result was from a recurring payment, or an initial one that's used for registration.
+     * @return
+     */
+    public boolean isRegistrationPayment() {
+        return isRegistrationPayment;
     }
 
     public String getRecurringId() {
         return recurringId;
+    }
+
+    public boolean isOk() {
+        return this.getResult()== RecurringPaymentResultType.Ok;
     }
 
     public static class Factory {
@@ -83,7 +94,7 @@ public class RecurringPaymentResult
             if(!res.containsKey("RESULT") && isInitial){
                 paymentResult.result = RecurringPaymentResultType.Ok;
             }
-            paymentResult.isInitial = isInitial;
+            paymentResult.isRegistrationPayment = isInitial;
             paymentResult.url = getClientRedirectionUrl(transactionId);
             return paymentResult;
         }

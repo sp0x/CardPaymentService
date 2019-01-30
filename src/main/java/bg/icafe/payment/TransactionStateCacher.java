@@ -16,13 +16,20 @@ public class TransactionStateCacher {
                        String redirectOnError,
                        String redirectOnOk,
                        String expirationDate){
+        //Create the transaction cache
         _jedis.set(getKey(result.getTransactionId(), "correlationId"), correlationId);
         _jedis.set(getKey(result.getTransactionId(), "from"), replyTo);
-        _jedis.set(getKey(result.getTransactionId(), "state"), TransactionState.Open.toString());
+        if(!result.isRegistrationPayment() && result.isOk()){
+            _jedis.set(getKey(result.getTransactionId(), "state"), TransactionState.Resolved.toString());
+        }else{
+            _jedis.set(getKey(result.getTransactionId(), "state"), TransactionState.Open.toString());
+        }
         _jedis.set(getKey(result.getTransactionId(), "redirectOnError"), redirectOnError);
         _jedis.set(getKey(result.getTransactionId(), "redirectOnOk"), redirectOnOk);
         _jedis.set(getKey(result.getTransactionId(), "expirationDate"), expirationDate);
+        _jedis.set(getKey(result.getTransactionId(), "isRegistrationPayment"), result.isRegistrationPayment() ? "true" : "false");
         String recurringId = result.getRecurringId();
+        //If it's a recurring one, log it in it's registered transaction
         if(recurringId!=null && recurringId.length()>0){
             _jedis.sadd("transactions:recurring:" + result.getRecurringId(), result.getTransactionId());
         }

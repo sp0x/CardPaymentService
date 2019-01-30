@@ -58,10 +58,25 @@ Transaction reply:
   "transactionId": "the id of the transaction",
   "result": "ok|failed|error",
   "error": "Request error message",
-  "type": "transactionCreation"
+  "type": "transactionCreation",
+  "isRegistrationPayment": false
 }
 ```
-The reply is sent back to the `replyTo` header of the message!  
+The reply is sent back to the `replyTo` header of the message!   
+Recurring transaction reply:   
+```json
+{
+  "url": "The url to which to redirect the user",
+  "transactionId": "the id of the transaction",
+  "result": "ok|failed|error",
+  "resultCode": "000",
+  "error": "Request error message",
+  "type": "transactionCreation",
+  "isRegistrationPayment": true
+}
+```
+Note that in this case you won't have to use the url to redirect the user.  
+
 After filling in the payment details, you would get another reply to the same `replyTo` dest.
 ```json
 {

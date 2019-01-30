@@ -1,7 +1,10 @@
 package bg.icafe.payment;
 
 import bg.icafe.*;
+import bg.icafe.network.mq.TransactionClient;
 import lv.tietoenator.cs.ecomm.merchant.Merchant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.Objects;
@@ -17,6 +20,8 @@ public class ECOMMHelper
     private final TransactionStateCacher _transactionStateCacher;
     private String currency;
     private RecurringPaymentResult.Factory _resultFactory;
+    private static final Logger logger = LoggerFactory.getLogger(ECOMMHelper.class);
+    private boolean _loggingEnabled;
 
     public ECOMMHelper(String clientIp, Merchant merchant, Properties props){
         this.merch = merchant;
@@ -62,7 +67,9 @@ public class ECOMMHelper
         String recurringResult = this.merch.startSMSTransRP(amount, currency, clientIp, p.getDescription(),
                 language, recurringPaymentId, expires, props);
        // String rp_registry = this.merch.registerRP(currency, clientIp, p.getDescription(), language, recurringPaymentId, expires, props);
-        System.out.println("Payment response: " + recurringResult);
+        if(_loggingEnabled){
+            logger.info("InitialRecurring Payment response: " + recurringResult);
+        }
         //System.out.println("RP reg: " + rp_registry);
         Map<String,String> parsedResult = this.parser.parse(recurringResult);
         if(parsedResult.containsKey("error")){
@@ -73,8 +80,8 @@ public class ECOMMHelper
             recurringPaymentId = result.getTransactionId();
         }
         parsedResult.put("recurringPaymentId", recurringPaymentId);
-        System.out.println("Recurring id: " + recurringPaymentId);
-        System.out.println("Expires: " + expires);
+        //System.out.println("Recurring id: " + recurringPaymentId);
+        ///System.out.println("Expires: " + expires);
         return result;
     }
 
@@ -95,19 +102,18 @@ public class ECOMMHelper
         //Set<String> transactions = _transactionStateCacher.getRecurringTransactions(recurringPaymentId);
         //String firstTransaction = transactions.stream().findFirst().get();
         // String expires = _transactionStateCacher.getTransactionExpiry(firstTransaction);
-
         //Properties recurringProps = new Properties();
-
         //recurringProps.setProperty("rec_pmnt_id", recurringPaymentId);
         //recurringProps.setProperty("language", Config.getDefaultLanguage());
         //recurringProps.setProperty("perspayee_expiry", expires);
-
-
-        System.out.println("Recurring id: " + recurringPaymentId);
         //System.out.println("Expires: " + expires);
 
         String recurringResult = this.merch.makeRP(recurringPaymentId, amount, currency, clientIp, p.getDescription(), null);
-        System.out.println("Recurring response: " + recurringResult);
+        if(_loggingEnabled){
+            logger.info("Recurring id: " + recurringPaymentId);
+            logger.info("Recurring Payment response: " + recurringResult);
+        }
+
         Map<String,String> parsedResult = this.parser.parse(recurringResult);
         parsedResult.put("recurringPaymentId", recurringPaymentId);
         if(parsedResult.containsKey("error")){
@@ -142,4 +148,7 @@ public class ECOMMHelper
         else return TransactionResultType.Unknown;
     }
 
+    public void enableLogging(boolean enabled) {
+        _loggingEnabled = enabled;
+    }
 }
