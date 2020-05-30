@@ -35,7 +35,7 @@ public class ECOMMHelperTest {
         ECOMMResponseParser mockBankResponseParser = mock(ECOMMResponseParser.class);
         Map<String, String> okResponse = new HashMap<String, String>();
         okResponse.put("TRANSACTION_ID", "123");
-        okResponse.put("RESULT", "OK");
+        okResponse.put("RESULT", "CREATED");
         okResponse.put("RESULT_CODE", "200");
         okResponse.put("recurringPaymentId", "");
         when(mockBankResponseParser.parse(anyString())).thenReturn(okResponse);
