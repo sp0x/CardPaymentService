@@ -14,7 +14,7 @@ public class ECOMMHelper
     private final Merchant merch;
     private final String clientIp;
     private final Properties props;
-    private final ECOMMResponseParser parser;
+    private IBankResponseParser ecomParser;
     private final TransactionStateCacher _transactionStateCacher;
     private String currency;
     private RecurringPaymentResult.Factory _resultFactory;
@@ -25,10 +25,14 @@ public class ECOMMHelper
         this.merch = merchant;
         this.clientIp = clientIp;
         this.props = props;
-        this.parser = new ECOMMResponseParser();
+        this.ecomParser = new ECOMMResponseParser();
         this.currency = Config.getCurrency();
         _resultFactory = new RecurringPaymentResult.Factory(props);
         _transactionStateCacher = new TransactionStateCacher();
+    }
+
+    public void setResponseParser(IBankResponseParser parser){
+        this.ecomParser = parser;
     }
 
     public String getCurrency() {
@@ -69,7 +73,7 @@ public class ECOMMHelper
             logger.info("InitialRecurring Payment response: " + recurringResult);
         }
         //System.out.println("RP reg: " + rp_registry);
-        Map<String,String> parsedResult = this.parser.parse(recurringResult);
+        Map<String,String> parsedResult = this.ecomParser.parse(recurringResult);
         if(parsedResult.containsKey("error")){
             throw new TransactionException(parsedResult.get("error"));
         }
@@ -112,7 +116,7 @@ public class ECOMMHelper
             logger.info("Recurring Payment response: " + recurringResult);
         }
 
-        Map<String,String> parsedResult = this.parser.parse(recurringResult);
+        Map<String,String> parsedResult = this.ecomParser.parse(recurringResult);
         parsedResult.put("recurringPaymentId", recurringPaymentId);
         if(parsedResult.containsKey("error")){
             throw new TransactionException(parsedResult.get("error"));
@@ -122,7 +126,7 @@ public class ECOMMHelper
 
     public TransactionResult issueRefund(String transactionId){
         String result = this.merch.refund(transactionId);
-        Map<String, String> parsedResult = this.parser.parse(result);
+        Map<String, String> parsedResult = this.ecomParser.parse(result);
         TransactionResultType restype = parseTransactionResult(parsedResult.get("RESULT"));
         return TransactionResult.fromResult(restype);
     }
@@ -130,7 +134,7 @@ public class ECOMMHelper
     public TransactionResult getTransactionStatus(String transactionId, boolean isRecurring){
         String transactionResult = this.merch.getTransResult(transactionId, clientIp);
 
-        Map<String,String> result = this.parser.parse(transactionResult);
+        Map<String,String> result = this.ecomParser.parse(transactionResult);
         return (TransactionResult) TransactionResult.fromResult(result, isRecurring);
     }
 

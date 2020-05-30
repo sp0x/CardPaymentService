@@ -63,10 +63,10 @@ public class RecurringPaymentResult
     }
 
     public static class Factory {
-        private final Properties props;
+        private final Properties bankProps;
 
         public Factory(Properties props) {
-            this.props = props;
+            this.bankProps = props;
         }
 
         public RecurringPaymentResult fromRecurringResult(Map<String, String> res, boolean isInitial) {
@@ -75,12 +75,6 @@ public class RecurringPaymentResult
             }
             String transactionId = res.get("TRANSACTION_ID");
             String result = res.get("RESULT");
-//        for (String name: res.keySet()){
-//            String key =name.toString();
-//            String value = res.get(name).toString();
-//            System.out.println(key + " " + value);
-//        }
-
             String resultCode = res.get("RESULT_CODE");
             String rrn = res.get("RRN");
             String approvalCode = res.get("APPROVAL_CODE");
@@ -106,9 +100,10 @@ public class RecurringPaymentResult
 
 
         private String getClientRedirectionUrl(String transactionId){
-            String clientUrl = props.getProperty("bank.server.clienturl").trim();
-            String output = clientUrl + "?trans_id=" +  URLEncoder.encode(transactionId);
-            return output;
+            String bankClientUrl = bankProps.getProperty("bank.server.clienturl");
+            if(bankClientUrl==null) bankClientUrl = "";
+            String clientUrl = bankClientUrl.trim();
+            return String.format("%s?trans_id=%s", clientUrl, URLEncoder.encode(transactionId));
         }
     }
 

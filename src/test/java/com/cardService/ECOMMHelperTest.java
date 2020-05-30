@@ -8,9 +8,14 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 import static junit.framework.TestCase.assertNotNull;
+import static org.mockito.Mockito.*;
 
 public class ECOMMHelperTest {
 
@@ -19,9 +24,25 @@ public class ECOMMHelperTest {
 
     @Before
     public void setUp() throws Exception {
-        Pair<Merchant, Properties> props = Config.getMerchantConfiguration();
-        helper = new ECOMMHelper("127.0.0.1", props.getLeft(), props.getRight());
+        Properties mockProperties = mock(Properties.class);
+        when((mockProperties.getProperty("keystore.file"))).thenReturn("");
+        when((mockProperties.getProperty("keystore.type"))).thenReturn("JKS");
+        when((mockProperties.getProperty("keystore.password"))).thenReturn("password");
+        when((mockProperties.getProperty("bank.server.url"))).thenReturn("https://bank.com");
+        when((mockProperties.getProperty("bank.server.clienturl"))).thenReturn("https://bank.com");
+        when((mockProperties.getProperty("returnOkUrl"))).thenReturn("https://us.com/ok");
+        when((mockProperties.getProperty("returnFailUrl"))).thenReturn("https://us.com/fail");
+        ECOMMResponseParser mockBankResponseParser = mock(ECOMMResponseParser.class);
+        Map<String, String> okResponse = new HashMap<String, String>();
+        okResponse.put("TRANSACTION_ID", "123");
+        okResponse.put("RESULT", "OK");
+        okResponse.put("RESULT_CODE", "200");
+        okResponse.put("recurringPaymentId", "");
+        when(mockBankResponseParser.parse(anyString())).thenReturn(okResponse);
 
+        Pair<Merchant, Properties> props = Config.getMerchantConfiguration(mockProperties);
+        helper = new ECOMMHelper("127.0.0.1", props.getLeft(), mockProperties);
+        helper.setResponseParser(mockBankResponseParser);
     }
 
     @Test
@@ -37,6 +58,7 @@ public class ECOMMHelperTest {
         assertNotNull(result);
         assertNotNull(result.getTransactionId());
         assertNotNull(result.getUrl());
+        assertEquals("", result.getRecurringId());
     }
 //
 //    @Test

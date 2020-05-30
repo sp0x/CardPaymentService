@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  *
  */
-public class ECOMMResponseParser {
+public class ECOMMResponseParser implements IBankResponseParser {
     /**
      * Parse a ECOMM response string to a hashmap
      * @param payload
