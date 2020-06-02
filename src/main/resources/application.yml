@@ -1,0 +1,19 @@
+server:
+  port: 6789
+  compression:
+    enabled: true
+  max-http-header-size: 20000
+
+grpc:
+  port: 6790
+
+spring:
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration, org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+
+
+## App Properties
+app:
+  jwtSecret: JWTSuperSecretKey
+  jwtExpirationInMs: 604800000
+  jwtPublic: MIIBIjANBgkasdsiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjhldbYQc6jGJ7XquLAk7TkOgL33BSFuOw7DdTLpWdyeNePHKrz/L0L7KqslEE+Fxn5lExjcH06PHm/wPEKcu5IIigYWnQ+5STqnUb5Puy9+cGyYXd6ks/lq38GwhWB1Ybh833rrihTBg4CDb1bFoa/x8O97ujI9OPpC/TNbubUGKDOQKgeIzsNeuSXdDX8H3LJlRWf9nbl7j3Vo1b708iZRnmy6PUqn5hJ0S6uPIiSTqn9OVlxm9kyIh6NwXHVr7gzOI9H+Xjqo5zy5w/J21Ispihy0z3LjD5i6UXyHTXUXDt3i1yVPTyq73hP/xWjRYihXxi9EHn1zd8N7JUnwqwwIDAQAB

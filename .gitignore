@@ -40,3 +40,5 @@ cert/
 /integrationTests/config.ini
 .project
 .classpath
+.settings
+**.zip.png
