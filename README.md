@@ -1,5 +1,5 @@
 # Service for recurring payments using FiBank's ECOMM service.
-[![maven](https://github.com/sp0x/CardPaymentService/workflows/maven/badge.svg)](https://github.com/sp0x/CardPaymentService)
+![Java CI with Maven](https://github.com/sp0x/CardPaymentService/workflows/Java%20CI%20with%20Maven/badge.svg)
 [![sp0x](https://circleci.com/gh/sp0x/CardPaymentService.svg?style=shield)](https://circleci.com/gh/sp0x/CardPaymentService)
 [![codecov](https://codecov.io/gh/sp0x/CardPaymentService/branch/master/graph/badge.svg)](https://codecov.io/gh/sp0x/CardPaymentService)
 
