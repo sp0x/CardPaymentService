@@ -38,4 +38,5 @@ cert/
 /src/main/resources/settings.properties
 **.iml
 /integrationTests/config.ini
-/integrationTests/config.ini
+.project
+.classpath

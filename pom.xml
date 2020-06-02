@@ -14,7 +14,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <grpc.version>1.21.0</grpc.version>
-        <protobuf.version>3.7.1</protobuf.version>
+        <protobuf.javaversion>3.11.4</protobuf.javaversion>
         <protobufjavaformat.version>1.4</protobufjavaformat.version>
 
         <jwt.version>0.9.0</jwt.version>
@@ -104,6 +104,11 @@
             <artifactId>grpc-stub</artifactId>
             <version>${grpc.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>${protobuf.javaversion}</version>
+        </dependency>
 
         <!-- Spring -->
         <dependency>
@@ -190,10 +195,6 @@
             <artifactId>h2</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>

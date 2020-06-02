@@ -1,9 +1,8 @@
 package com.cardService.network.http;
 
-import org.eclipse.jetty.server.NCSARequestLog;
+
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerCollection;
-import org.eclipse.jetty.server.handler.RequestLogHandler;
 import org.eclipse.jetty.servlet.ServletHandler;
 
 import java.net.InetSocketAddress;
@@ -23,15 +22,6 @@ public class TransactionCallbackServer {
         handlers.addHandler(handler);
         _server.setErrorHandler(new CustomErrorHandler());
         handler.addServletWithMapping(TransactionCallbackServlet.class, "/");
-
-        NCSARequestLog requestLog = new NCSARequestLog();
-        requestLog.setAppend(true);
-        requestLog.setExtended(true);
-        requestLog.setLogCookies(false);
-        requestLog.setLogTimeZone("GMT");
-        RequestLogHandler requestLogHandler = new RequestLogHandler();
-        requestLogHandler.setRequestLog(requestLog);
-        handlers.addHandler(requestLogHandler);
     }
 
     public void listenAndBlock() throws Exception {

@@ -2,6 +2,7 @@ package com.cardService;
 
 import lv.tietoenator.cs.ecomm.merchant.Merchant;
 import org.apache.commons.lang3.tuple.Pair;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Properties;
@@ -26,6 +27,7 @@ public class ConfigTest {
         assertNotNull(merchantConfig.getRight());
     }
 
+    @Ignore
     @Test
     public void getMerchantConfigurationReturnsNullWithoutConfig() {
         Pair<Merchant, Properties> props = Config.getMerchantConfiguration();
