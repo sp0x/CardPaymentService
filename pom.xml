@@ -20,7 +20,7 @@
         <jwt.version>0.9.0</jwt.version>
         <mapstruct.version>1.3.1.Final</mapstruct.version>
 
-        <http.version>4.5.9</http.version>
+        <http.version>4.5.13</http.version>
     </properties>
     <packaging>jar</packaging>
     <!-- Local repo for some of the libs, don't abuse the system scope-->
