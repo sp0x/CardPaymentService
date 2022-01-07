@@ -14,7 +14,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <grpc.version>1.21.0</grpc.version>
-        <protobuf.javaversion>3.11.4</protobuf.javaversion>
+        <protobuf.javaversion>3.16.1</protobuf.javaversion>
         <protobufjavaformat.version>1.4</protobufjavaformat.version>
 
         <jwt.version>0.9.0</jwt.version>
